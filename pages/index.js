@@ -64,7 +64,7 @@ export default () => {
         <Box d={{ md: "flex" }} alignItems="flex-start">
           <Box p={6} flex="2">
             <Heading as="h1" size="xl" fontWeight="semibold">
-              PORTAL COVID-19 no
+              Portal COVID-19 no
               <Box as="span" color="purple.500">
                 {" "}
                 Paraná

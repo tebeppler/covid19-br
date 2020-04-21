@@ -8,8 +8,6 @@ import Brazil from "../components/DailyMapSpikesBrazil";
 import TopGrowing from "../components/TopGrowing";
 import StatesLines from "../components/DailyLinesBrazil";
 
-import fetch from "isomorphic-unfetch";
-
 import {
   Box,
   Heading,

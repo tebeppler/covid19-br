@@ -1,14 +1,19 @@
 import { DSVRowArray, csv, utcParse } from "d3";
 import { group } from "d3-array";
-// export const getCovidJSON = () => d3.csv('https://brasil.io/dataset/covid19/caso?format=csv');
 
 let csvCovid: DSVRowArray = null;
+
+const isDeveloping = false;
 
 export const getCovidCSV = async (): Promise<DSVRowArray> => {
   if (csvCovid) {
     return csvCovid;
   }
-  csvCovid = await csv("/caso.csv"); // https://brasil.io/dataset/covid19/caso?format=csv
+  csvCovid = await csv(
+    isDeveloping
+      ? "/caso.csv"
+      : "https://brasil.io/dataset/covid19/caso?format=csv"
+  );
   return csvCovid;
 };
 
@@ -18,7 +23,7 @@ export const getCitiesCSV = async (): Promise<DSVRowArray> => {
   if (csvCities) {
     return csvCities;
   }
-  csvCities = await csv("/municipios_mini.csv"); // https://brasil.io/dataset/covid19/caso?format=csv
+  csvCities = await csv("/municipios_mini.csv");
   return csvCities;
 };
 

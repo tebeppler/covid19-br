@@ -39,13 +39,15 @@ const Header = (props) => {
           justify="space-between"
         >
           <Box display="flex" alignItems="center">
-            <Image
-              height="12"
-              width="auto"
-              objectFit="cover"
-              src="/img_logo.png"
-              alt="Portal COVID UFPR"
-            />
+            <a href="/">
+              <Image
+                height="12"
+                width="auto"
+                objectFit="cover"
+                src="/img_logo.png"
+                alt="Portal COVID UFPR"
+              />
+            </a>
           </Box>
 
           {/* <Flex align="center" color="gray.500">

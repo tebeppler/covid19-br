@@ -53,8 +53,6 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   main.variable(observer("map")).define("map", ["d3", "w", "h", "provinces", "path", "recentData", "confirmed_or_deaths", "scale", "projection", "colorScale", "radius", "breakpoint", "maxRadius", "legendRadii", "numFormat", "sFormat", "DOM", "showSubtitles", "places", "html", "delay", "data"], function (d3, w, h, provinces, path, recentData, confirmed_or_deaths, scale, projection, colorScale, radius, breakpoint, maxRadius, legendRadii, numFormat, sFormat, DOM, showSubtitles, places, html, delay, data) {
     const svg = d3
       .create("svg")
-      .attr("width", w)
-      .attr("height", h)
       .attr("viewBox", [0, 0, w, h])
       .attr("class", "italy");
 
@@ -63,9 +61,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
       .data(provinces.features)
       .enter()
       .append("path")
-      .attr("class", function (d) {
-        return "subunit";
-      })
+      .attr("class", "subunit")
       .attr("d", path);
 
     let bubble;

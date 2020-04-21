@@ -4,7 +4,6 @@ import { Flex, Box } from "@chakra-ui/core";
 import notebook from "../from_observablehq/daily_lines/index";
 import styled from "@emotion/styled";
 
-
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -25,7 +24,7 @@ export default class Map extends Component {
       <div className="Map">
         <div id="observablehq-65e7d81f">
           <Container>
-            <Flex rounded={8} borderWidth="1px" pl={4} m={2} h={10}
+            <Flex rounded={8} borderWidth="1px" pl={4} m={2} minH={10}
               className="observablehq-viewof-indicator"
               align="center"
               alignContent="center"

@@ -33,7 +33,6 @@ class OverallInfo extends Component {
     const deathsParana = Math.max(...parana.map((d) => +d.deaths));
 
     const lastUpdated = brazil[0].date;
-    console.log(lastUpdated);
     const parser = d3.utcParse("%Y-%m-%d");
     const date = parser(lastUpdated);
 
@@ -62,7 +61,9 @@ class OverallInfo extends Component {
           </Stat>
         </StatGroup>
         <StatLabel pt={2} style={{ textAlign: "center" }}>
-          última atualização: {date.toLocaleDateString("pt-BR")}
+          <a href="https://brasil.io/dataset/covid19/">
+            última atualização: {date.toLocaleDateString("pt-BR")} (fonte)
+          </a>
         </StatLabel>
       </Box>
     );

@@ -49,7 +49,6 @@ Fonte: [covid19-br](https://brasil.io/api/dataset/covid19)`
       .attr("y", 14).style("fill", (d, i) => colors[array.indexOf(d)]);
 
     bar.append("text")
-      .attr("x", function (d) { return x(d) - 3; })
       .attr("y", 52 / 2)
       .attr("dy", ".35em")
       .attr("font-family", "sans-serif")
@@ -177,7 +176,7 @@ Fonte: [covid19-br](https://brasil.io/api/dataset/covid19)`
 
         if ("ontouchstart" in document) svg
           .style("-webkit-tap-highlight-color", "transparent")
-          .on("touchmove touchstart", moved)
+          .on("touchstart", moved)
           .on("touchend", left)
         else svg
           .on("mousemove mouseenter", moved)

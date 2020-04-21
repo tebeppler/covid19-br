@@ -45,13 +45,13 @@ export default class App extends Component {
       <div className="App">
         <div id="observablehq-cf886714">
           <Container>
-            <Flex rounded={8} borderWidth="1px" pl={4} m={4} h={10}
+            <Flex rounded={8} borderWidth="1px" pl={4} m={4} minH={10}
               className="observablehq-viewof-confirmed_or_deaths"
               align="center"
             />
             <Flex
               w={380}
-              h={10}
+              minH={10}
               rounded={8}
               align="center"
               borderWidth="1px" pr={4}

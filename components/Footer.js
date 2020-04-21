@@ -1,15 +1,13 @@
 /** @jsx jsx */
 import {
   Box,
-  Button,
   Flex,
   Image,
-  IconButton,
   useColorMode,
   Link,
 } from "@chakra-ui/core";
 import { jsx } from "@emotion/core";
-import { Container } from "../pages";
+import styled from "@emotion/styled";
 
 export const FooterContainer = (props) => (
   <Box
@@ -17,10 +15,18 @@ export const FooterContainer = (props) => (
     right="0"
     borderTopWidth="1px"
     width="full"
-    height="4rem"
+    minH="4rem"
     {...props}
   />
 );
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row wrap;
+  align-items: center;
+  min-height:"4rem";
+`;
 
 const Footer = (props) => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -28,14 +34,9 @@ const Footer = (props) => {
   return (
     <FooterContainer bg={bg[colorMode]} {...props}>
       <Box h={2}></Box>
-      <Container h="100%">
-        <Flex
-          size="100%"
-          px={["0", "0", "6"]}
-          align="center"
-          justify="space-between"
-        >
-          <Flex align="center" color="gray.500">
+      <Container>
+        <Flex align="center" color="gray.500">
+          <a href="https://www.c3sl.ufpr.br/">
             <Image
               height="12"
               width="auto"
@@ -43,6 +44,8 @@ const Footer = (props) => {
               src="/img_c3sl.png"
               alt="C3SL"
             />
+          </a>
+          <a href="http://www.exatas.ufpr.br/portal/en/">
             <Image
               height="12"
               width="auto"
@@ -50,6 +53,8 @@ const Footer = (props) => {
               src="/img_exatas.png"
               alt="Exatas UFPR"
             />
+          </a>
+          <a href="http://web.leg.ufpr.br/">
             <Image
               height="12"
               width="auto"
@@ -57,17 +62,19 @@ const Footer = (props) => {
               src="/img_leg.png"
               alt="Laboratório de Estatística e Geoinformação"
             />
-            <Image
-              height="12"
-              width="auto"
-              objectFit="cover"
-              src="/img_labdsi.png"
-              alt="Laboratório de Design 
+          </a>
+          <Image
+            height="12"
+            width="auto"
+            objectFit="cover"
+            src="/img_labdsi.png"
+            alt="Laboratório de Design 
 de Sistemas de Informação"
-            />
-          </Flex>
+          />
+        </Flex>
 
-          <Box display="flex" alignItems="center">
+        <Box alignItems="center">
+          <a href="https://www.ufpr.br/portalufpr/">
             <Image
               height="12"
               width="auto"
@@ -75,8 +82,8 @@ de Sistemas de Informação"
               src="/img_ufpr.png"
               alt="UFPR"
             />
-          </Box>
-        </Flex>
+          </a>
+        </Box>
       </Container>
     </FooterContainer>
   );

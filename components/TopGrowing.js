@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Runtime, Inspector } from "@observablehq/runtime";
-import notebook from "../top_growing/index";
+import notebook from "../from_observablehq/top_growing/index";
 
 class TopGrowing extends Component {
   componentDidMount() {

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Runtime, Inspector } from "@observablehq/runtime";
-import notebook from "../pr_filled/index";
+import { Box, Flex } from "@chakra-ui/core";
+import notebook from "../from_observablehq/daily_parana_map_filled/index";
 import styled from "@emotion/styled";
 
 const Container = styled.div`
@@ -44,13 +45,17 @@ export default class App extends Component {
       <div className="App">
         <div id="observablehq-cf886714">
           <Container>
-            <div
+            <Flex rounded={8} borderWidth="1px" pl={4} m={4} h={10}
               className="observablehq-viewof-confirmed_or_deaths"
               align="center"
             />
-            <div
+            <Flex
+              w={380}
+              h={10}
+              rounded={8}
+              align="center"
+              borderWidth="1px" pr={4}
               className="observablehq-viewof-day"
-              style={{ width: "360px" }}
             />
           </Container>
           <div className="observablehq-colorlegend" align="center" />

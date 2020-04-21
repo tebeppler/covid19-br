@@ -1,8 +1,8 @@
 // https://observablehq.com/d/45a84f2f48ee31a8@2882
-import define1 from "./synchronizedviews.js";
+import define1 from "../shared_d3/syncviews.js";
 import * as d3 from "d3";
 import * as d3array from "d3-array";
-import { getCovidCSV } from "../utils/fetcher.ts";
+import { getCovidCSV } from "../../utils/fetcher.ts";
 
 export default function define(runtime, observer) {
   const main = runtime.module();

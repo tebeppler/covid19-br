@@ -48,7 +48,7 @@ const Header = (props) => {
             />
           </Box>
 
-          <Flex align="center" color="gray.500">
+          {/* <Flex align="center" color="gray.500">
             <Link ml="2" href="/" style={{ textDecoration: "none" }}>
               <Button variant="ghost">Home</Button>
             </Link>
@@ -65,7 +65,7 @@ const Header = (props) => {
               onClick={toggleColorMode}
               icon={colorMode === "light" ? "moon" : "sun"}
             />
-          </Flex>
+          </Flex> */}
         </Flex>
       </Container>
     </HeaderContainer>

@@ -1,12 +1,12 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 
-import ParanaAnimation from "../components/ParanaAnimation";
-import ParanaContour from "../components/ParanaContour";
-import ParanaFilled from "../components/ParanaFilled";
+import ParanaContour from "../components/ContourParana";
+import ParanaFilledInteractive from "../components/DailyMapFilledParana";
 import TopGrowing from "../components/TopGrowing";
-
-import fetch from "isomorphic-unfetch";
+import BrazilInteractive from "../components/DailyMapSpikesBrazil";
+import StatesLines from "../components/DailyLinesBrazil";
+import OverallInfo from "../components/OverallInfo.tsx";
 
 import {
   Box,
@@ -60,19 +60,18 @@ export default () => {
   return (
     <Box mb={8}>
       <Header />
-
-      <Box as="section" pt={40} pb={24}>
+      <Box as="section" mx="auto" maxW="3xl" pt={40} pb={16}>
         <Box d={{ md: "flex" }} alignItems="flex-start">
-          <Box p={6} flex="1">
+          <Box p={6} flex="2">
             <Heading as="h1" size="xl" fontWeight="semibold">
               PORTAL COVID-19 no
-              <Box as="span" color="teal.500">
+              <Box as="span" color="purple.500">
                 {" "}
                 Paraná
               </Box>
               <Box size={4} />
             </Heading>
-            <Heading as="h4" size="sm" fontSize={14} fontWeight="normal">
+            <Heading as="h4" size="sm" fontSize={12} fontWeight="normal">
               <p>
                 Este portal tem por objetivo agregar informações atualizadas,
                 modelos estatísticos, visualizações de dados e links úteis sobre
@@ -90,10 +89,7 @@ export default () => {
             </Heading>
           </Box>
           <Box size={8} />
-          <Box p={6} flex="2" rounded="10px" borderWidth="1px">
-            {" "}
-            Resumo Geral
-          </Box>
+          <OverallInfo />
         </Box>
       </Box>
 
@@ -111,12 +107,32 @@ export default () => {
       </Box>
 
       <Box maxW="3xl" mx="auto">
-        <ParanaFilled />
+        <ParanaFilledInteractive />
+      </Box>
+
+      <Divider mt={4} />
+
+      <Box maxW="3xl" mx="auto">
+        <BrazilInteractive />
+      </Box>
+
+      <Divider mt={4} />
+
+      <Box maxW="3xl" mx="auto">
+        <StatesLines />
       </Box>
 
       <Divider my={8} />
 
-      <Box as="section" pt={40} pb={24}>
+      <Container>
+        <Box maxW="xl" mx="auto" textAlign="center">
+          <Heading as="h1" size="sm" fontWeight="semibold">
+            Aqui vem os outros gráficos
+      </Heading>
+        </Box>
+      </Container>
+
+      {/* <Box as="section" pt={40} pb={24}>
         <Container>
           <Box maxW="xl" mx="auto" textAlign="center">
             <Heading as="h1" size="xl" fontWeight="semibold">
@@ -151,16 +167,16 @@ export default () => {
               </Button>
             </Box>
 
-            <Flex mt="4" display={["flex", "none"]} justify="center">
-              {/* <GitHubButton /> */}
-            </Flex>
-          </Box>
-        </Container>
-      </Box>
+            // <Flex mt="4" display={["flex", "none"]} justify="center">
+            //   {/* <GitHubButton /> */}
+      {/* </Flex> */}
+      {/* </Box> */}
+      {/* </Container> */}
+      {/* </Box> */}
 
-      <Divider my={16} />
+      {/* <Divider my={16} /> */}
 
-      <Container>
+      {/* <Container>
         <Grid
           templateColumns={{ sm: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }}
           gap={10}
@@ -179,9 +195,9 @@ export default () => {
             component to create new things.
           </Feature>
         </Grid>
-      </Container>
+      </Container> */}
 
-      <Divider my={16} />
+      {/* <Divider my={16} />
 
       <Container>
         <Box maxW="xl" mx="auto">
@@ -195,9 +211,9 @@ export default () => {
         </Box>
 
         <Box></Box>
-      </Container>
+      </Container> */}
 
-      <Divider my={16} />
+      <Divider my={8} />
       <Footer />
 
       <Box as="footer" mt={4} textAlign="center">

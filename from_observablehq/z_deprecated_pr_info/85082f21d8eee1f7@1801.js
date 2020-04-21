@@ -1,9 +1,7 @@
-// https://observablehq.com/@bernaferrari/parana-coronavirus-daily-cases-map-covid-19@2389
-import define1 from "./scrubber.js";
-import define2 from "./inputs.js";
-import define3 from "./colorlegend.js";
-import * as d3 from "d3";
-import { getCovidCSV, getCitiesCSV } from "../utils/fetcher.ts";
+// https://observablehq.com/@bernaferrari/parana-coronavirus-daily-cases-map-covid-19@1801
+import define1 from "../shared_d3/scrubber.js";
+import define2 from "../shared_d3/syncviews.js";
+import { getCovidCSV, dataCityCovid } from "../../utils/fetcher.ts";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -15,23 +13,16 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
 *Fonte: [covid19-br](https://brasil.io/api/dataset/covid19)*`;
   });
   main
-    .variable(observer("viewof confirmed_or_deaths"))
-    .define("viewof confirmed_or_deaths", ["radio"], function (radio) {
-      return radio({
-        options: [
-          { label: "casos", value: "confirmed" },
-          { label: "mortes", value: "deaths" },
-        ],
-        value: "confirmed",
-      });
+    .variable(observer())
+    .define(["viewof scale", "html"], function ($0, html) {
+      return $0.bind(html`<select
+        style="font-size:1em;font-family:serif;margin:0 4px"
+      >
+        <option>bolhas </option
+        ><option>espinhos </option
+        ><option>preenchido </option></select
+      >`);
     });
-  main
-    .variable(observer("confirmed_or_deaths"))
-    .define(
-      "confirmed_or_deaths",
-      ["Generators", "viewof confirmed_or_deaths"],
-      (G, _) => G.input(_)
-    );
   main
     .variable(observer("viewof day"))
     .define("viewof day", ["Scrubber", "dates", "delay"], function (
@@ -48,203 +39,6 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   main
     .variable(observer("day"))
     .define("day", ["Generators", "viewof day"], (G, _) => G.input(_));
-  main
-    .variable(observer("colorlegend"))
-    .define(
-      "colorlegend",
-      ["confirmed_or_deaths", "legend", "colorScaleFilled"],
-      function (confirmed_or_deaths, legend, colorScaleFilled) {
-        if (confirmed_or_deaths === "confirmed") {
-          return legend({
-            color: colorScaleFilled,
-            title: "Casos confirmados",
-            ticks: 3,
-          });
-        } else if (confirmed_or_deaths === "deaths") {
-          return legend({
-            color: colorScaleFilled,
-            title: "Mortes",
-            ticks: 3,
-          });
-        }
-      }
-    );
-  main
-    .variable(observer("colorScaleFilled"))
-    .define(
-      "colorScaleFilled",
-      ["d3", "confirmed_or_deaths", "maxCases"],
-      function (d3, confirmed_or_deaths, maxCases) {
-        return d3
-          .scaleSequentialSqrt(
-            confirmed_or_deaths === "confirmed"
-              ? d3.interpolateYlGnBu
-              : d3.interpolateYlOrRd
-          )
-          .domain([0, maxCases]);
-      }
-    );
-  main
-    .variable(observer("map_spike"))
-    .define(
-      "map_spike",
-      [
-        "d3",
-        "w",
-        "h",
-        "statesOuter",
-        "path",
-        "estado",
-        "currentData",
-        "confirmed_or_deaths",
-        "colorScaleFilled",
-        "places",
-        "projection",
-        "html",
-      ],
-      function (
-        d3,
-        w,
-        h,
-        statesOuter,
-        path,
-        estado,
-        currentData,
-        confirmed_or_deaths,
-        colorScaleFilled,
-        places,
-        projection,
-        html
-      ) {
-        const svg = d3
-          .create("svg")
-          .attr("viewBox", [0, 0, w, h])
-          .attr("class", "italy");
-
-        svg
-          .append("path")
-          .datum(statesOuter)
-          .attr("class", "outer")
-          .attr("d", path)
-          .attr("id", "usPath")
-          .attr("stroke", "grey")
-          .attr("stroke-width", "1px");
-
-        svg
-          .selectAll(".subunit")
-          .data(estado.features)
-          .enter()
-          .append("path")
-          .attr("stroke", "#BBB")
-          .attr("class", "county")
-          .style("stroke-width", (d) => {
-            let find = currentData.find(
-              (dd) => dd.city_ibge_code == d.properties.cod
-            );
-            let value = find !== undefined ? find[confirmed_or_deaths] : 0;
-            return value > 0 ? "0px" : "0.25px";
-          })
-          .attr("fill", (d) => {
-            let find = currentData.find(
-              (dd) => dd.city_ibge_code == d.properties.cod
-            );
-            let value = find !== undefined ? find[confirmed_or_deaths] : 0;
-            // return value > 0 ? colorScaleFilled(value) : "#fff";
-            return colorScaleFilled(value);
-          })
-          .attr("d", path)
-          .append("title")
-          .text((d) => {
-            let find = currentData.find(
-              (dd) => dd.city_ibge_code == d.properties.cod
-            );
-            //               data_city.find(dd => dd.codigo_ibge == d.properties.cod).name
-            let value =
-              find !== undefined
-                ? `${find.city}: ${find[confirmed_or_deaths]}`
-                : "0";
-            return value;
-          });
-
-        svg
-          .selectAll("place")
-          .data(places.features)
-          .enter()
-          .append("circle")
-          // .attr("class", "place")
-          .attr("r", 2.5)
-          .attr("fill", "#fff")
-          .attr("stroke", "#000")
-          .attr("transform", function (d) {
-            return "translate(" + projection(d.geometry.coordinates) + ")";
-          });
-
-        let label = svg
-          .selectAll(".place-label")
-          .data(places.features)
-          .enter()
-          .append("text")
-          .attr("class", "place-label2")
-          .style("paint-order", "stroke")
-          .style("stroke-width", "3")
-          .style("stroke", "rgba(255,255,255,.85)")
-          .style("stroke-linecap", "round")
-          .style("stroke-linejoin", "round")
-          .attr("transform", function (d) {
-            return "translate(" + projection(d.geometry.coordinates) + ")";
-          })
-          .attr("dy", ".35em")
-          .text(function (d) {
-            return d.properties.name;
-          })
-          .attr("pointer-events", "none")
-          .attr("x", function (d) {
-            return d.geometry.coordinates[0] > -1 ? -6 : 6;
-          })
-          .style("text-anchor", function (d) {
-            return d.geometry.coordinates[0] < -1 ? "start" : "end";
-          });
-
-        label
-          .append("tspan")
-          .attr("class", "additionalnum")
-          .style("font-weight", "bold")
-          .attr("x", (d) => label.x)
-          .attr("y", (d) => label.y)
-          .text((d) => {
-            return (
-              " (" +
-              currentData.find((dd) => dd.city === d.properties.name)[
-                confirmed_or_deaths
-              ] +
-              ")"
-            );
-          });
-
-        const wrapper = html`<div class="wrapper"></div>`;
-        wrapper.append(svg.node());
-        return wrapper;
-      }
-    );
-  main
-    .variable(observer("currentData"))
-    .define("currentData", ["data", "index"], function (data, index) {
-      return data[index];
-    });
-  main
-    .variable(observer("viewof scale"))
-    .define("viewof scale", ["radio"], function (radio) {
-      return radio({
-        options: [
-          { label: "bolhas", value: "bolhas" },
-          { label: "espinhos", value: "espinhos" },
-        ],
-        value: "bolhas",
-      });
-    });
-  main
-    .variable(observer("scale"))
-    .define("scale", ["Generators", "viewof scale"], (G, _) => G.input(_));
   main
     .variable(observer("map"))
     .define(
@@ -265,7 +59,6 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
         "estado",
         "recentData",
         "projection",
-        "confirmed_or_deaths",
         "places",
         "html",
         "delay",
@@ -287,7 +80,6 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
         estado,
         recentData,
         projection,
-        confirmed_or_deaths,
         places,
         html,
         delay,
@@ -316,7 +108,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           .attr(
             "transform",
             `translate(${
-              w > breakpoint ? [w - w / 4.9, h / 3.5] : [10, h - 15]
+            w > breakpoint ? [w - w / 4.9, h / 3.5] : [10, h - 15]
             })`
           );
 
@@ -367,8 +159,8 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           })
           .attr("class", "bubble")
           .attr("fill-opacity", 0.5)
-          .attr("fill", (d) => colorScale(+d[confirmed_or_deaths]))
-          .attr("r", (d) => radius(+d[confirmed_or_deaths]));
+          .attr("fill", (d) => colorScale(+d.confirmed))
+          .attr("r", (d) => radius(+d.confirmed));
 
         bubble.append("title");
 
@@ -417,13 +209,11 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
               .data(data[i])
               .call((b) => {
                 b.transition(t)
-                  .attr("fill", (d) => colorScale(+d[confirmed_or_deaths]))
-                  .attr("r", (d) => radius(+d[confirmed_or_deaths]));
+                  .attr("fill", (d) => colorScale(+d.confirmed))
+                  .attr("r", (d) => radius(+d.confirmed));
               })
               .select("title")
-              .text(
-                (d) => `${d.city}: ${numFormat(+d[confirmed_or_deaths])} casos`
-              );
+              .text((d) => `${d.city}: ${numFormat(+d.confirmed)} casos`);
           },
         });
       }
@@ -496,8 +286,8 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     ) {
       return d3.geoMercator().fitExtent(
         [
-          [20, 0],
-          [w - 20, h],
+          [40, 0],
+          [w - 40, h],
         ],
         estado
       );
@@ -569,6 +359,14 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
       return d3.scaleSqrt().domain([0, maxCases]).range([0, maxRadius]);
     });
   main
+    .variable(observer("viewof scale"))
+    .define("viewof scale", ["View"], function (View) {
+      return new View("espinhos");
+    });
+  main
+    .variable(observer("scale"))
+    .define("scale", ["Generators", "viewof scale"], (G, _) => G.input(_));
+  main
     .variable(observer("colorScale"))
     .define("colorScale", ["d3", "maxCases"], function (d3, maxCases) {
       return d3
@@ -581,13 +379,12 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   });
   main
     .variable(observer("maxCases"))
-    .define(
-      "maxCases",
-      ["d3", "data_city_covid", "confirmed_or_deaths"],
-      function (d3, data_city_covid, confirmed_or_deaths) {
-        return d3.max(data_city_covid.map((d) => +d[confirmed_or_deaths]));
-      }
-    );
+    .define("maxCases", ["d3", "data_city_covid"], function (
+      d3,
+      data_city_covid
+    ) {
+      return d3.max(data_city_covid.map((d) => +d.confirmed));
+    });
   main
     .variable(observer("data"))
     .define("data", ["d3array", "data_city_covid"], function (
@@ -648,103 +445,49 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     });
   main
     .variable(observer("data_city_covid"))
-    .define("data_city_covid", ["data_covid", "data_city"], function (
-      data_covid,
-      data_city
-    ) {
-      return data_covid.map((d) => {
-        let value = data_city.find((e) => d.city_ibge_code === e.codigo_ibge);
-        return { ...d, ...value };
-      });
+    .define("data_city_covid", [], async function () {
+      return await dataCityCovid();
     });
-  main
-    .variable(observer("data_city"))
-    .define("data_city", ["d3"], async function (d3) {
-      return (await getCitiesCSV())
-        .filter((d) => d.codigo_uf === "41")
-        .map((d) => {
-          d["latitude"] = +d["latitude"];
-          d["longitude"] = +d["longitude"];
-          d["codigo_ibge"] = +d["codigo_ibge"];
-          return d;
-        });
-    });
-  main
-    .variable(observer("data_covid"))
-    .define("data_covid", ["d3"], async function (d3) {
-      return (await getCovidCSV())
-        .filter(
-          (d) =>
-            d.place_type === "city" && d.city_ibge_code != "" && d.state == "PR"
-        )
-        .map((d) => {
-          d["confirmed"] = +d["confirmed"];
-          d["deaths"] = +d["deaths"];
-          d["city_ibge_code"] = +d["city_ibge_code"];
-          return d;
-        });
-    });
-  main
-    .variable(observer("data_with_holes_not_used"))
-    .define(
-      "data_with_holes_not_used",
-      ["d3array", "data_city_covid"],
-      function (d3array, data_city_covid) {
-        return Array.from(d3array.group(data_city_covid, (d) => d.date))
-          .map((d) => d[1])
-          .sort((a, b) => a.date - b.date)
-          .reverse();
-      }
-    );
   main.variable(observer("breakpoint")).define("breakpoint", function () {
-    return 500;
+    return 600;
   });
   main
     .variable(observer("maxRadius"))
     .define("maxRadius", ["w", "breakpoint"], function (w, breakpoint) {
       return w > breakpoint ? 30 : 18;
     });
-  main
-    .variable(observer("topCities"))
-    .define("topCities", ["recentData", "confirmed_or_deaths"], function (
-      recentData,
-      confirmed_or_deaths
-    ) {
-      return recentData
-        .sort((a, b) => b[confirmed_or_deaths] - a[confirmed_or_deaths])
-        .slice(0, 5);
-    });
-  main
-    .variable(observer("places"))
-    .define("places", ["topCities", "estado"], function (topCities, estado) {
-      let topCitiesFlat = topCities.map((d) => d.city_ibge_code);
-      let updatedArray = [];
-      for (var i = 0; i < estado.features.length; i++) {
-        let flatIndex = topCitiesFlat.indexOf(
-          estado.features[i].properties.cod
-        );
-        if (flatIndex > -1) {
-          let features = { ...estado.features[i] };
-          features.properties = {
-            name: topCities[flatIndex].city,
-            city_ibge_code: topCities[flatIndex].city_ibge_code,
-          };
-          features.geometry = {
-            type: "Point",
-            coordinates: [
-              topCities[flatIndex].longitude,
-              topCities[flatIndex].latitude,
-            ],
-          };
-          updatedArray.push(features);
-        }
-      }
-
-      return {
-        type: "FeatureCollection",
-        features: updatedArray,
-      };
-    });
+  main.variable(observer("places")).define("places", function () {
+    return {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          properties: { name: "Curitiba" },
+          geometry: { type: "Point", coordinates: [-49.2646, -25.4195] },
+        },
+        {
+          type: "Feature",
+          properties: { name: "Maringá" },
+          geometry: { type: "Point", coordinates: [-51.9333, -23.4205] },
+        },
+        {
+          type: "Feature",
+          properties: { name: "Cascavel" },
+          geometry: { type: "Point", coordinates: [-53.459, -24.9573] },
+        },
+        {
+          type: "Feature",
+          properties: { name: "Foz do Iguaçu" },
+          geometry: { type: "Point", coordinates: [-54.5827, -25.5427] },
+        },
+        {
+          type: "Feature",
+          properties: { name: "Londrina" },
+          geometry: { type: "Point", coordinates: [-51.1691, -23.304] },
+        },
+      ],
+    };
+  });
   main
     .variable(observer("recentData"))
     .define("recentData", ["data"], function (data) {
@@ -752,29 +495,21 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     });
   main
     .variable(observer("dates"))
-    .define("dates", ["data_covid", "parseDate"], function (
-      data_covid,
-      parseDate
+    .define("dates", ["data_city_covid"], function (
+      data_city_covid
     ) {
-      return data_covid
+      return data_city_covid
         .map((item) => item.date)
         .filter((value, index, self) => self.indexOf(value) === index)
-        .map((d) => parseDate(d))
         .reverse();
     });
   main
-    .variable(observer("parseDate"))
-    .define("parseDate", ["d3"], function (d3) {
-      return d3.utcParse("%Y-%m-%d");
-    });
-  main
     .variable(observer("dateExtent"))
-    .define("dateExtent", ["d3", "data_covid", "parseDate"], function (
+    .define("dateExtent", ["d3", "data_city_covid"], function (
       d3,
-      data_covid,
-      parseDate
+      data_city_covid
     ) {
-      return d3.extent(data_covid, (r) => parseDate(r.date));
+      return d3.extent(data_city_covid, (r) => r.date);
     });
   main
     .variable(observer("estado"))
@@ -785,11 +520,6 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     .variable(observer("statesOuter"))
     .define("statesOuter", ["topojson", "brasil"], function (topojson, brasil) {
       return topojson.mesh(brasil, brasil.objects["41"], (a, b) => a === b);
-    });
-  main
-    .variable(observer("statesInner"))
-    .define("statesInner", ["topojson", "brasil"], function (topojson, brasil) {
-      return topojson.mesh(brasil, brasil.objects["41"], (a, b) => a !== b);
     });
   main.variable(observer("sFormat")).define("sFormat", ["d3"], function (d3) {
     return d3.format(".1s");
@@ -810,15 +540,15 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   const child1 = runtime.module(define1);
   main.import("Scrubber", child1);
   const child2 = runtime.module(define2);
-  main.import("radio", child2);
-  const child3 = runtime.module(define3);
-  main.import("legend", child3);
+  main.import("View", child2);
   main
     .variable(observer("topojson"))
     .define("topojson", ["require"], function (require) {
       return require("topojson-client@3");
     });
-  main.variable(observer("d3")).define("d3", d3);
+  main.variable(observer("d3")).define("d3", ["require"], function (require) {
+    return require("d3@5", "d3-geo-voronoi");
+  });
   main
     .variable(observer("d3array"))
     .define("d3array", ["require"], function (require) {

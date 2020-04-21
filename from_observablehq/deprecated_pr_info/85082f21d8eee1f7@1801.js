@@ -1,6 +1,7 @@
 // https://observablehq.com/@bernaferrari/parana-coronavirus-daily-cases-map-covid-19@1801
-import define1 from "./scrubber.js";
-import define2 from "./syncviews.js";
+import define1 from "../shared_d3/scrubber.js";
+import define2 from "../shared_d3/syncviews.js";
+import { getCovidCSV, dataCityCovid } from "../../utils/fetcher.ts";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -107,7 +108,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           .attr(
             "transform",
             `translate(${
-              w > breakpoint ? [w - w / 4.9, h / 3.5] : [10, h - 15]
+            w > breakpoint ? [w - w / 4.9, h / 3.5] : [10, h - 15]
             })`
           );
 
@@ -444,46 +445,9 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     });
   main
     .variable(observer("data_city_covid"))
-    .define("data_city_covid", ["data_covid", "data_city"], function (
-      data_covid,
-      data_city
-    ) {
-      return data_covid.map((d) => {
-        let value = data_city.find((e) => d.city_ibge_code === e.codigo_ibge);
-        return { ...d, ...value };
-      });
+    .define("data_city_covid", [], async function () {
+      return await dataCityCovid();
     });
-  main
-    .variable(observer("data_city"))
-    .define("data_city", ["d3"], function (d3) {
-      return d3.csv(
-        "https://raw.githubusercontent.com/kelvins/Municipios-Brasileiros/master/csv/municipios.csv",
-        (d) => (d.codigo_uf === "41" ? d : null)
-      );
-    });
-  main
-    .variable(observer("data_covid"))
-    .define("data_covid", ["d3"], async function (d3) {
-      return await d3.csv(
-        "https://brasil.io/dataset/covid19/caso?format=csv",
-        (d) =>
-          d.place_type === "city" && d.city_ibge_code != "" && d.state == "PR"
-            ? d
-            : null
-      );
-    });
-  main
-    .variable(observer("data_with_holes_not_used"))
-    .define(
-      "data_with_holes_not_used",
-      ["d3array", "data_city_covid"],
-      function (d3array, data_city_covid) {
-        return Array.from(d3array.group(data_city_covid, (d) => d.date))
-          .map((d) => d[1])
-          .sort((a, b) => a.date - b.date)
-          .reverse();
-      }
-    );
   main.variable(observer("breakpoint")).define("breakpoint", function () {
     return 600;
   });
@@ -531,29 +495,21 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     });
   main
     .variable(observer("dates"))
-    .define("dates", ["data_covid", "parseDate"], function (
-      data_covid,
-      parseDate
+    .define("dates", ["data_city_covid"], function (
+      data_city_covid
     ) {
-      return data_covid
+      return data_city_covid
         .map((item) => item.date)
         .filter((value, index, self) => self.indexOf(value) === index)
-        .map((d) => parseDate(d))
         .reverse();
     });
   main
-    .variable(observer("parseDate"))
-    .define("parseDate", ["d3"], function (d3) {
-      return d3.utcParse("%Y-%m-%d");
-    });
-  main
     .variable(observer("dateExtent"))
-    .define("dateExtent", ["d3", "data_covid", "parseDate"], function (
+    .define("dateExtent", ["d3", "data_city_covid"], function (
       d3,
-      data_covid,
-      parseDate
+      data_city_covid
     ) {
-      return d3.extent(data_covid, (r) => parseDate(r.date));
+      return d3.extent(data_city_covid, (r) => r.date);
     });
   main
     .variable(observer("estado"))
@@ -581,11 +537,6 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   main.variable(observer("brasil")).define("brasil", ["d3"], function (d3) {
     return d3.json("/pr.json");
   });
-  main.variable(observer("br")).define("br", ["d3"], function (d3) {
-    return d3.json(
-      "https://gist.githubusercontent.com/ruliana/1ccaaab05ea113b0dff3b22be3b4d637/raw/196c0332d38cb935cfca227d28f7cecfa70b412e/br-states.json"
-    );
-  });
   const child1 = runtime.module(define1);
   main.import("Scrubber", child1);
   const child2 = runtime.module(define2);
@@ -593,7 +544,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   main
     .variable(observer("topojson"))
     .define("topojson", ["require"], function (require) {
-      return require("topojson-client@3");
+      return require("./node_modules/topojson-client@3");
     });
   main.variable(observer("d3")).define("d3", ["require"], function (require) {
     return require("d3@5", "d3-geo-voronoi");
@@ -601,7 +552,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   main
     .variable(observer("d3array"))
     .define("d3array", ["require"], function (require) {
-      return require("d3-array@^2.4");
+      return require("./node_modules/d3-array@^2.4");
     });
   return main;
 }

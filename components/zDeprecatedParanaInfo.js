@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Runtime, Inspector } from "@observablehq/runtime";
-import notebook from "../pr_info/index";
+import notebook from "../from_observablehq/z_deprecated_pr_info/index";
 
 export default class App extends Component {
   componentDidMount() {

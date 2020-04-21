@@ -1,8 +1,7 @@
 // https://observablehq.com/@bernaferrari/parana-contour-cases-map-covid-19@1878
-import define1 from "./scrubber.js";
-import define2 from "./3df1b33bb2cfcd3c@431.js";
 import * as topojson from "topojson-client";
 import * as d3 from "d3";
+import { allDataForState, dataCityCovid } from "../../utils/fetcher.ts";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -41,8 +40,8 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
       ) {
         const svg = d3
           .create("svg")
-          .attr("width", w)
-          .attr("height", h)
+          // .attr("width", w)
+          // .attr("height", h)
           .attr("viewBox", [0, 0, w, h]);
 
         svg
@@ -89,25 +88,6 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
         return wrapper;
       }
     );
-  main
-    .variable(observer("climateFeatures"))
-    .define("climateFeatures", ["topojson", "brasil"], function (
-      topojson,
-      brasil
-    ) {
-      return topojson.feature(brasil, brasil.objects["41"]).features;
-    });
-  main
-    .variable(observer("climateVoronoi"))
-    .define("climateVoronoi", ["d3", "climateFeatures"], function (
-      d3,
-      climateFeatures
-    ) {
-      return d3.geoVoronoi({
-        type: "FeatureCollection",
-        features: climateFeatures,
-      });
-    });
   main
     .variable(observer("rawPoints"))
     .define("rawPoints", ["d3"], function (d3) {
@@ -476,140 +456,57 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   });
   main
     .variable(observer("data"))
-    .define("data", ["d3array", "data_city_covid"], function (
-      d3array,
+    .define("data", ["data_city_covid"], async function (
       data_city_covid
     ) {
-      let data_with_holes = Array.from(
-        d3array.group(data_city_covid, (d) => d.date)
-      )
-        .map((d) => d[1])
-        .sort((a, b) => a.date - b.date)
-        .reverse();
-
-      let mutableArray = [...data_with_holes].filter(function (el) {
-        return el != null;
-      });
-
-      for (let i = 1; i < data_with_holes.length; i++) {
-        for (let j = 0; j < mutableArray[i - 1].length; j++) {
-          let found = mutableArray[i].find(
-            (element) =>
-              element.state === mutableArray[i - 1][j].state &&
-              element.city === mutableArray[i - 1][j].city
-          );
-          if (found !== undefined) {
-            continue;
-          }
-
-          mutableArray[i].push({ ...data_with_holes[i - 1][j] });
-        }
-      }
-
-      // this can also be commented, transition will still be buggy
-      //   now backtrack to fill the data with zeros
-      for (let i = data_with_holes.length - 2; i >= 0; i--) {
-        for (let j = 0; j < mutableArray[i + 1].length; j++) {
-          let found = mutableArray[i].find(
-            (element) =>
-              element.state === mutableArray[i + 1][j].state &&
-              element.city === mutableArray[i + 1][j].city
-          );
-          if (found !== undefined) {
-            continue;
-          }
-
-          let newCase = { ...data_with_holes[i + 1][j] };
-          newCase.confirmed = 0;
-          mutableArray[i].push(newCase);
-        }
-
-        // trying to sort
-        mutableArray[i] = mutableArray[i].sort((a, b) =>
-          `${a.state}${a.city}`.localeCompare(`${b.state}${b.city}`)
-        );
-      }
-
-      return mutableArray;
+      return await allDataForState(data_city_covid, "41", "PR", false);
     });
   main
     .variable(observer("data_city_covid"))
-    .define("data_city_covid", ["data_covid", "data_city"], function (
-      data_covid,
-      data_city
+    .define("data_city_covid", [], async function () {
+      return await dataCityCovid("41", "PR");
+    });
+  main
+    .variable(observer("topCities"))
+    .define("topCities", ["recentData", "confirmed_or_deaths"], function (
+      recentData,
+      confirmed_or_deaths
     ) {
-      return data_covid.map((d) => {
-        let value = data_city.find((e) => d.city_ibge_code === e.codigo_ibge);
-        return { ...d, ...value };
-      });
+      return recentData
+        .sort((a, b) => b[confirmed_or_deaths] - a[confirmed_or_deaths])
+        .slice(0, 5);
     });
   main
-    .variable(observer("data_city"))
-    .define("data_city", ["d3"], function (d3) {
-      return d3.csv(
-        "https://raw.githubusercontent.com/kelvins/Municipios-Brasileiros/master/csv/municipios.csv",
-        (d) => (d.codigo_uf === "41" ? d : null)
-      );
-    });
-  main
-    .variable(observer("data_covid"))
-    .define("data_covid", ["d3"], async function (d3) {
-      return await d3.csv(
-        "https://brasil.io/dataset/covid19/caso?format=csv",
-        (d) => {
-          d["latitude"] = +d["latitude"];
-          d["longitude"] = +d["longitude"];
-          d["confirmed"] = +d["confirmed"];
-          d["deaths"] = +d["deaths"];
-
-          return d.place_type === "city" && d.city_ibge_code != "" ? d : null;
+    .variable(observer("places"))
+    .define("places", ["topCities", "estado"], function (topCities, estado) {
+      let topCitiesFlat = topCities.map((d) => d.city_ibge_code);
+      let updatedArray = [];
+      for (var i = 0; i < estado.features.length; i++) {
+        let flatIndex = topCitiesFlat.indexOf(
+          estado.features[i].properties.cod
+        );
+        if (flatIndex > -1) {
+          let features = { ...estado.features[i] };
+          features.properties = {
+            name: topCities[flatIndex].city,
+            city_ibge_code: topCities[flatIndex].city_ibge_code,
+          };
+          features.geometry = {
+            type: "Point",
+            coordinates: [
+              topCities[flatIndex].longitude,
+              topCities[flatIndex].latitude,
+            ],
+          };
+          updatedArray.push(features);
         }
-      );
-    });
-  main
-    .variable(observer("data_with_holes_not_used"))
-    .define(
-      "data_with_holes_not_used",
-      ["d3array", "data_city_covid"],
-      function (d3array, data_city_covid) {
-        return Array.from(d3array.group(data_city_covid, (d) => d.date))
-          .map((d) => d[1])
-          .sort((a, b) => a.date - b.date)
-          .reverse();
       }
-    );
-  main.variable(observer("places")).define("places", function () {
-    return {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          properties: { name: "Curitiba" },
-          geometry: { type: "Point", coordinates: [-49.2646, -25.4195] },
-        },
-        {
-          type: "Feature",
-          properties: { name: "Maringá" },
-          geometry: { type: "Point", coordinates: [-51.9333, -23.4205] },
-        },
-        {
-          type: "Feature",
-          properties: { name: "Cascavel" },
-          geometry: { type: "Point", coordinates: [-53.459, -24.9573] },
-        },
-        {
-          type: "Feature",
-          properties: { name: "Foz do Iguaçu" },
-          geometry: { type: "Point", coordinates: [-54.5827, -25.5427] },
-        },
-        {
-          type: "Feature",
-          properties: { name: "Londrina" },
-          geometry: { type: "Point", coordinates: [-51.1691, -23.304] },
-        },
-      ],
-    };
-  });
+
+      return {
+        type: "FeatureCollection",
+        features: updatedArray,
+      };
+    });
   main
     .variable(observer("recentData"))
     .define("recentData", ["data"], function (data) {
@@ -622,7 +519,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
       parseDate
     ) {
       return data_covid
-        .map((item) => item.date)
+        .map(d => d.rawDate)
         .filter((value, index, self) => self.indexOf(value) === index)
         .map((d) => parseDate(d))
         .reverse();
@@ -631,15 +528,6 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     .variable(observer("parseDate"))
     .define("parseDate", ["d3"], function (d3) {
       return d3.utcParse("%Y-%m-%d");
-    });
-  main
-    .variable(observer("dateExtent"))
-    .define("dateExtent", ["d3", "data_covid", "parseDate"], function (
-      d3,
-      data_covid,
-      parseDate
-    ) {
-      return d3.extent(data_covid, (r) => parseDate(r.date));
     });
   main
     .variable(observer("estado"))
@@ -654,22 +542,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   main.variable(observer("brasil")).define("brasil", ["d3"], function (d3) {
     return d3.json("/pr.json");
   });
-  const child1 = runtime.module(define1);
-  main.import("Scrubber", child1);
-  const child2 = runtime.module(define2);
-  main.import("View", child2);
-  main
-    .variable(observer("topojson"))
-    .define("topojson", ["require"], function (require) {
-      return require("topojson-client@3");
-    });
-  main.variable(observer("d3")).define("d3", ["require"], function (require) {
-    return require("d3@5", "d3-geo-voronoi");
-  });
-  main
-    .variable(observer("d3array"))
-    .define("d3array", ["require"], function (require) {
-      return require("d3-array@^2.4");
-    });
+  main.variable(observer("topojson")).define("topojson", topojson);
+  main.variable(observer("d3")).define("d3", d3);
   return main;
 }

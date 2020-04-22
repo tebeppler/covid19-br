@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 
-import ParanaAnimation from "../components/zDeprecatedParanaInfo";
 import ParanaContour from "../components/ContourParana";
 import ParanaFilled from "../components/DailyMapFilledParana";
 import Brazil from "../components/DailyMapSpikesBrazil";

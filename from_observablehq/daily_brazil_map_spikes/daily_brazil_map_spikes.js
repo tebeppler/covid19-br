@@ -3,7 +3,7 @@ import define1 from "../shared_d3/scrubber.js";
 import define2 from "../shared_d3/inputs.js";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
-import { dataCityCovid, allDataForState } from "../../utils/fetcher.ts";
+import { getDataCityCovid, parseDataCityCovid } from "../../utils/fetcher.ts";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -383,11 +383,11 @@ form output {
     )
   });
   main.variable(observer("data_city_covid")).define("data_city_covid", async function () {
-    return await dataCityCovid(null, null);
+    return await getDataCityCovid(null, null);
   });
   main.variable(observer("data"))
     .define("data", ["data_city_covid"], async function (data_city_covid) {
-      return await allDataForState(data_city_covid);
+      return await parseDataCityCovid(data_city_covid);
     }
     );
   main.variable(observer("breakpoint")).define("breakpoint", function () {
@@ -451,7 +451,7 @@ form output {
   main.variable(observer("projection")).define("projection", ["d3", "showSubtitles", "w", "h", "provinces"], function (d3, showSubtitles, w, h, provinces) {
     return (
       d3.geoMercator()
-        .fitExtent([[0, 0], [showSubtitles ? (w - 50) : w, h]], provinces)
+        .fitExtent([[20, 0], [showSubtitles ? (w - 60) : w - 20, h]], provinces)
     )
   });
   main.variable(observer("topCities")).define("topCities", ["recentData", "confirmed_or_deaths"], function (recentData, confirmed_or_deaths) {

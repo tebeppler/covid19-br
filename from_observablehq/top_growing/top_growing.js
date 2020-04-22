@@ -244,17 +244,25 @@ export default function define(runtime, observer) {
     ) {
       const obj = {};
 
+      var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      let limit;
+      if (isMobile) {
+        limit = 4;
+      } else {
+        limit = 8;
+      }
+
       obj.confirmed = allTimeseries
         .sort((a, b) => b[b.length - 1].confirmed - a[a.length - 1].confirmed)
-        .slice(0, 4);
+        .slice(0, limit);
 
       obj.deaths = allTimeseries
         .sort((a, b) => b[b.length - 1].deaths - a[a.length - 1].deaths)
-        .slice(0, 4);
+        .slice(0, limit);
 
       obj.new = allTimeseries
         .sort((a, b) => b[b.length - 1].new - a[a.length - 1].new)
-        .slice(0, 4);
+        .slice(0, limit);
 
       if (order === "confirmed cases") obj.show = obj.confirmed;
       else if (order === "new daily cases") obj.show = obj.new;

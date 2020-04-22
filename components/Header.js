@@ -50,6 +50,18 @@ const Header = (props) => {
             </a>
           </Box>
 
+          <Box alignItems="center">
+            <a href="https://www.ufpr.br/portalufpr/">
+              <Image
+                height="12"
+                width="auto"
+                objectFit="cover"
+                src="/img_ufpr.png"
+                alt="UFPR"
+              />
+            </a>
+          </Box>
+
           {/* <Flex align="center" color="gray.500">
             <Link ml="2" href="/" style={{ textDecoration: "none" }}>
               <Button variant="ghost">Home</Button>

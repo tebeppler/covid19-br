@@ -21,7 +21,7 @@ Fonte: [covid19-br](https://brasil.io/api/dataset/covid19)`
         options: [
           { label: "casos", value: "confirmed" },
           { label: "mortes", value: "deaths" },
-          { label: "casos por 100 mil habitantes", value: "confirmed_per_100k_inhabitants" },
+          { label: "casos/100 mil hab", value: "confirmed_per_100k_inhabitants" },
         ],
         value: "confirmed",
       })
@@ -264,7 +264,7 @@ Fonte: [covid19-br](https://brasil.io/api/dataset/covid19)`
   });
   main.variable(observer("y")).define("y", ["d3", "data", "height", "margin"], function (d3, data, height, margin) {
     return (
-      d3.scaleLinear()
+      d3.scaleSqrt()
         .domain([0, d3.max(data.series, d => d3.max(d.values))]).nice()
         .range([height - margin.bottom, margin.top])
     )

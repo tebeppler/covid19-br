@@ -1,5 +1,4 @@
 // https://observablehq.com/@bernaferrari/parana-coronavirus-daily-cases-map-covid-19@2389
-import define1 from "../shared_d3/scrubber.js";
 import define2 from "../shared_d3/inputs.js";
 import define3 from "./colorlegend.js";
 import * as d3 from "d3";
@@ -27,18 +26,6 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
       });
     });
   main.variable(observer("confirmed_or_deaths")).define("confirmed_or_deaths", ["Generators", "viewof confirmed_or_deaths"], (G, _) => G.input(_));
-  main.variable(observer("viewof day")).define("viewof day", ["Scrubber", "dates", "delay"], function (Scrubber, dates, delay) {
-    return (
-      Scrubber(dates.slice(0, dates.length), {
-        delay,
-        loop: false,
-        format: d => d.toLocaleDateString()
-      })
-    )
-  });
-  main
-    .variable(observer("day"))
-    .define("day", ["Generators", "viewof day"], (G, _) => G.input(_));
   main
     .variable(observer("colorlegend"))
     .define(
@@ -112,16 +99,18 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           .attr("viewBox", [0, 0, w, h])
           .attr("class", "italy");
 
-        svg
+        const g = svg.append("g");
+
+        g
           .append("path")
           .datum(statesOuter)
           .attr("class", "outer")
           .attr("d", path)
-          .attr("id", "prFilledPath")
+          .attr("id", "bonaPath")
           .attr("stroke", "grey")
           .attr("stroke-width", "1px");
 
-        svg
+        g
           .selectAll(".subunit")
           .data(estado.features)
           .enter()
@@ -130,14 +119,14 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           .attr("class", "county")
           .style("stroke-width", (d) => {
             let find = currentData.find(
-              (dd) => dd.city_ibge_code === d.properties.cod
+              (dd) => dd.city_ibge_code == d.properties.id
             );
             let value = find !== undefined ? find[confirmed_or_deaths] : 0;
             return value > 0 ? "0px" : "0.25px";
           })
           .attr("fill", (d) => {
             let find = currentData.find(
-              (dd) => dd.city_ibge_code == d.properties.cod
+              (dd) => dd.city_ibge_code == d.properties.id
             );
             let value = find !== undefined ? find[confirmed_or_deaths] : 0;
             // return value > 0 ? colorScaleFilled(value) : "#fff";
@@ -147,7 +136,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           .append("title")
           .text((d) => {
             let find = currentData.find(
-              (dd) => dd.city_ibge_code == d.properties.cod
+              (dd) => dd.city_ibge_code == d.properties.id
             );
             //               data_city.find(dd => dd.codigo_ibge == d.properties.cod).name
             let value =
@@ -156,6 +145,15 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
                 : "0";
             return value;
           });
+
+        svg.call(d3.zoom()
+          .extent([[0, 0], [w, h]])
+          .scaleExtent([1, 8])
+          .on("zoom", zoomed));
+
+        function zoomed() {
+          g.attr("transform", d3.event.transform);
+        }
 
         svg
           .selectAll("place")
@@ -215,8 +213,8 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     );
   main
     .variable(observer("currentData"))
-    .define("currentData", ["data", "index"], function (data, index) {
-      return data[index];
+    .define("currentData", ["recentData", "index"], function (recentData, index) {
+      return recentData;//data[index];
     });
   main
     .variable(observer("viewof scale"))
@@ -232,192 +230,13 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   main
     .variable(observer("scale"))
     .define("scale", ["Generators", "viewof scale"], (G, _) => G.input(_));
-  main
-    .variable(observer("map"))
-    .define(
-      "map",
-      [
-        "d3",
-        "w",
-        "h",
-        "statesOuter",
-        "path",
-        "breakpoint",
-        "maxRadius",
-        "legendRadii",
-        "radius",
-        "colorScale",
-        "numFormat",
-        "sFormat",
-        "estado",
-        "recentData",
-        "projection",
-        "confirmed_or_deaths",
-        "places",
-        "html",
-        "delay",
-        "data",
-      ],
-      function (
-        d3,
-        w,
-        h,
-        statesOuter,
-        path,
-        breakpoint,
-        maxRadius,
-        legendRadii,
-        radius,
-        colorScale,
-        numFormat,
-        sFormat,
-        estado,
-        recentData,
-        projection,
-        confirmed_or_deaths,
-        places,
-        html,
-        delay,
-        data
-      ) {
-        const svg = d3
-          .create("svg")
-          // .attr("width", w)
-          // .attr("height", h)
-          .attr("viewBox", [0, 0, w, h])
-          .attr("class", "italy");
-
-        svg
-          .append("path")
-          .datum(statesOuter)
-          .attr("class", "outer")
-          .attr("d", path)
-          .attr("id", "prFilledPath")
-          .style("fill", "white")
-          .attr("stroke", "grey");
-
-        const legend = svg
-          .append("g")
-          .attr("class", "legend")
-          .attr("fill", "#777")
-          .attr(
-            "transform",
-            `translate(${
-            w > breakpoint ? [w - w / 4.9, h / 3.5] : [10, h - 15]
-            })`
-          );
-
-        legend
-          .append("text")
-          .attr("class", "legend-title")
-          .text("No. casos confirmados")
-          .attr("dy", -maxRadius * 2.5);
-
-        const legendBubbles = legend.selectAll("g").data(legendRadii).join("g");
-
-        let margin = 0;
-        legendBubbles
-          .attr("transform", (d, i) => {
-            margin +=
-              i === 0 ? 0 : radius(legendBubbles.data()[i - 1]) * 2 + 15;
-            return `translate(${margin + radius(d)}, 0)`;
-          })
-          .append("circle")
-          .attr("class", "legend-bubble")
-          .attr("fill", (d) => colorScale(d))
-          .attr("cy", (d) => -radius(d))
-          .attr("r", radius);
-
-        legendBubbles
-          .append("text")
-          .attr("dy", "1.3em")
-          .text(w > breakpoint ? numFormat : sFormat);
-
-        svg
-          .selectAll(".subunit")
-          .data(estado.features)
-          .enter()
-          .append("path")
-          .attr("class", "subunit")
-          .attr("fill", "#f4f4f4")
-          .attr("stroke", "#999")
-          .attr("stroke-width", "0.5")
-          .attr("d", path);
-
-        const bubble = svg
-          .selectAll(".bubble")
-          .data(recentData)
-          .enter()
-          .append("circle")
-          .attr("transform", function (d) {
-            return "translate(" + projection([d.longitude, d.latitude]) + ")";
-          })
-          .attr("class", "bubble")
-          .attr("fill-opacity", 0.5)
-          .attr("fill", (d) => colorScale(+d[confirmed_or_deaths]))
-          .attr("r", (d) => radius(+d[confirmed_or_deaths]));
-
-        bubble.append("title");
-
-        svg
-          .selectAll("place")
-          .data(places.features)
-          .enter()
-          .append("circle")
-          .attr("class", "place")
-          .attr("r", 2.5)
-          .attr("transform", function (d) {
-            return "translate(" + projection(d.geometry.coordinates) + ")";
-          });
-
-        svg
-          .selectAll(".place-label")
-          .data(places.features)
-          .enter()
-          .append("text")
-          .attr("class", "place-label")
-          .attr("transform", function (d) {
-            return "translate(" + projection(d.geometry.coordinates) + ")";
-          })
-          .attr("dy", ".35em")
-          .text(function (d) {
-            return d.properties.name;
-          })
-          .attr("x", function (d) {
-            return d.geometry.coordinates[0] > -1 ? -6 : 6;
-          })
-          .style("text-anchor", function (d) {
-            return d.geometry.coordinates[0] < -1 ? "start" : "end";
-          });
-
-        const wrapper = html`<div class="wrapper"></div>`;
-        wrapper.append(svg.node());
-
-        return Object.assign(wrapper, {
-          update(i) {
-            const t = svg
-              .transition()
-              .duration(i === 0 ? 0 : delay)
-              .ease(d3.easeLinear);
-
-            bubble
-              .data(data[i])
-              .call((b) => {
-                b.transition(t)
-                  .attr("fill", (d) => colorScale(+d[confirmed_or_deaths]))
-                  .attr("r", (d) => radius(+d[confirmed_or_deaths]));
-              })
-              .select("title")
-              .text(
-                (d) => `${d.city}: ${numFormat(+d[confirmed_or_deaths])} casos`
-              );
-          },
-        });
-      }
-    );
   main.variable(observer("style")).define("style", ["html"], function (html) {
     const c = `rgb(255, 255, 255, 0.5)`;
     return html`<style>
+      form output {
+        font-weight: bold;
+        font-size: 14px;
+      }
       .wrapper {
         text-align: center;
       }
@@ -447,6 +266,25 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           ${c} -0.416147px 0.909297px 0px, ${c} -0.989992px 0.14112px 0px,
           ${c} -0.653644px -0.756802px 0px, ${c} 0.283662px -0.958924px 0px,
           ${c} 0.96017px -0.279415px 0px;
+      }
+      .bubble,
+      .legend-bubble {
+        stroke-width: 0.8;
+        stroke: rgba(0, 0, 0, 0.3);
+      }
+      .bubble:hover {
+        stroke: rgba(0, 0, 0, 0.6);
+        stroke-width: 1.2;
+        cursor: crosshair;
+      }
+      .legend text {
+        fill: #000;
+      }
+      .legend-bubble {
+        stroke: rgba(0, 0, 0, 0.4);
+      }
+      .legend-title {
+        text-anchor: start;
       }
     </style>`;
   });
@@ -487,10 +325,10 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
       map.update(index);
     });
   main.variable(observer("w")).define("w", ["width"], function (width) {
-    return Math.min(width, 700);
+    return Math.min(width, 800);
   });
-  main.variable(observer("h")).define("h", ["width"], function (width) {
-    return Math.min(width, 400);
+  main.variable(observer("h")).define("h", function () {
+    return 800;
   });
   main
     .variable(observer("maxLegend"))
@@ -524,15 +362,6 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
       $0.value = dates.indexOf(day);
     });
   main
-    .variable(observer("radius"))
-    .define("radius", ["d3", "maxCases", "maxRadius"], function (
-      d3,
-      maxCases,
-      maxRadius
-    ) {
-      return d3.scaleSqrt().domain([0, maxCases]).range([0, maxRadius]);
-    });
-  main
     .variable(observer("colorScale"))
     .define("colorScale", ["d3", "maxCases"], function (d3, maxCases) {
       return d3
@@ -563,15 +392,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     .variable(observer("data_city_covid"))
     .define("data_city_covid", [], async function (
     ) {
-      return await getDataCityCovid("41", "PR");
-    });
-  main.variable(observer("breakpoint")).define("breakpoint", function () {
-    return 500;
-  });
-  main
-    .variable(observer("maxRadius"))
-    .define("maxRadius", ["w", "breakpoint"], function (w, breakpoint) {
-      return w > breakpoint ? 30 : 18;
+      return await getDataCityCovid(null, null);
     });
   main
     .variable(observer("topCities"))
@@ -590,7 +411,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
       let updatedArray = [];
       for (var i = 0; i < estado.features.length; i++) {
         let flatIndex = topCitiesFlat.indexOf(
-          estado.features[i].properties.cod
+          estado.features[i].properties.id
         );
         if (flatIndex > -1) {
           let features = { ...estado.features[i] };
@@ -645,17 +466,17 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   main
     .variable(observer("estado"))
     .define("estado", ["topojson", "brasil"], function (topojson, brasil) {
-      return topojson.feature(brasil, brasil.objects["41"]);
+      return topojson.feature(brasil, brasil.objects["geojs-100-mun"]);
     });
   main
     .variable(observer("statesOuter"))
     .define("statesOuter", ["topojson", "brasil"], function (topojson, brasil) {
-      return topojson.mesh(brasil, brasil.objects["41"], (a, b) => a === b);
+      return topojson.mesh(brasil, brasil.objects["geojs-100-mun"], (a, b) => a === b);
     });
   main
     .variable(observer("statesInner"))
     .define("statesInner", ["topojson", "brasil"], function (topojson, brasil) {
-      return topojson.mesh(brasil, brasil.objects["41"], (a, b) => a !== b);
+      return topojson.mesh(brasil, brasil.objects["geojs-100-mun"], (a, b) => a !== b);
     });
   main.variable(observer("sFormat")).define("sFormat", ["d3"], function (d3) {
     return d3.format(".1s");
@@ -671,10 +492,8 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
       return d3.geoPath().projection(projection);
     });
   main.variable(observer("brasil")).define("brasil", ["d3"], function (d3) {
-    return d3.json("/pr.json");
+    return d3.json("/mapa_bona.json");
   });
-  const child1 = runtime.module(define1);
-  main.import("Scrubber", child1);
   const child2 = runtime.module(define2);
   main.import("radio", child2);
   const child3 = runtime.module(define3);

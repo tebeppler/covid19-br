@@ -1,10 +1,9 @@
 import { DSVRowArray, csv, utcParse } from "d3";
 import { group } from "d3-array";
 
-let csvCovid: DSVRowArray = null;
-
 const isDeveloping = false;
 
+let csvCovid: DSVRowArray = null;
 export const getCovidCSV = async (): Promise<DSVRowArray> => {
   if (csvCovid) {
     return csvCovid;
@@ -18,7 +17,6 @@ export const getCovidCSV = async (): Promise<DSVRowArray> => {
 };
 
 let csvCities: DSVRowArray = null;
-
 export const getCitiesCSV = async (): Promise<DSVRowArray> => {
   if (csvCities) {
     return csvCities;
@@ -41,9 +39,9 @@ interface cities {
   city_ibge_code: number;
 }
 
-export const dataCityCovid = async (
-  stateNumber: string = "41",
-  stateShortName: string = "PR"
+export const getDataCityCovid = async (
+  stateNumber: string, // "41"
+  stateShortName: string // "PR"
 ) => {
   // this will contain a list of objects, where each object is:
   //
@@ -120,7 +118,7 @@ export const dataCityCovid = async (
   });
 };
 
-export const allDataForState = async (
+export const parseDataCityCovid = async (
   currentData: Array<cities>,
   // shouldBacktrack is useless when only most recent data matters
   shouldBacktrack: boolean = true
@@ -128,7 +126,7 @@ export const allDataForState = async (
   // sanity check
   let data_city_covid: Array<cities>;
   if (currentData === null || currentData === undefined) {
-    data_city_covid = await dataCityCovid("41", "PR");
+    data_city_covid = await getDataCityCovid("41", "PR");
   } else {
     data_city_covid = currentData;
   }
@@ -189,15 +187,13 @@ export const allDataForState = async (
   return mutableArray.map((e) =>
     e.sort((a, b) => a.city_ibge_code - b.city_ibge_code)
   );
-
-  // return mutableArray;
 };
 
 export const mostRecentDataForState = async (
-  stateNumber: string = "41",
-  stateShortName: string = "PR"
+  stateNumber: string,
+  stateShortName: string
 ): Promise<Array<cities>> => {
-  const city = await dataCityCovid(stateNumber, stateShortName);
-  const all = await allDataForState(city, false);
+  const city = await getDataCityCovid(stateNumber, stateShortName);
+  const all = await parseDataCityCovid(city, false);
   return all[all.length - 1];
 };

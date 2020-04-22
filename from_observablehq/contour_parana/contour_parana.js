@@ -1,7 +1,7 @@
 // https://observablehq.com/@bernaferrari/parana-contour-cases-map-covid-19@1878
 import * as topojson from "topojson-client";
 import * as d3 from "d3";
-import { allDataForState, dataCityCovid } from "../../utils/fetcher.ts";
+import { parseDataCityCovid, getDataCityCovid } from "../../utils/fetcher.ts";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -49,16 +49,16 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           .datum(statesOuter)
           .attr("class", "outer")
           .attr("d", path)
-          .attr("id", "usPath")
+          .attr("id", "prPath")
           .style("fill", "white")
           .attr("stroke", "#999")
           .attr("stroke-width", "0.5px");
 
         svg
           .append("clipPath")
-          .attr("id", "usClipPath")
+          .attr("id", "contourParanaClipPath")
           .append("use")
-          .attr("xlink:href", "#usPath");
+          .attr("xlink:href", "#prPath");
 
         const g = svg
           .append("g")
@@ -67,7 +67,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           .join("g");
 
         g.append("path")
-          .attr("clip-path", "url(#usClipPath)")
+          .attr("clip-path", "url(#contourParanaClipPath)")
           .attr("class", (d) => `contour ${d.value}`)
           .attr("d", d3.geoPath())
           // .attr("stroke-width", (d, i) => i % 5 ? 0.25 : 1)
@@ -357,8 +357,8 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
       ) {
         const svg = d3
           .create("svg")
-          .attr("width", w)
-          .attr("height", h)
+          // .attr("width", w)
+          // .attr("height", h)
           .attr("viewBox", [0, 0, w, h])
           .attr("class", "italy");
 
@@ -410,11 +410,6 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
       .wrapper {
         text-align: center;
       }
-      .subunit {
-        fill: none;
-        stroke: #999;
-        stroke-width: 0.5px;
-      }
       .inner {
         fill: none;
         stroke: #fff;
@@ -442,8 +437,8 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     ) {
       return d3.geoMercator().fitExtent(
         [
-          [0, 0],
-          [w, h],
+          [20, 0],
+          [w - 20, h],
         ],
         estado
       );
@@ -459,12 +454,12 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     .define("data", ["data_city_covid"], async function (
       data_city_covid
     ) {
-      return await allDataForState(data_city_covid, "41", "PR", false);
+      return await parseDataCityCovid(data_city_covid, false);
     });
   main
     .variable(observer("data_city_covid"))
     .define("data_city_covid", [], async function () {
-      return await dataCityCovid("41", "PR");
+      return await getDataCityCovid("41", "PR");
     });
   main
     .variable(observer("topCities"))

@@ -22,7 +22,6 @@ import {
 import Header from "../components/Header";
 import * as Chakra from "@chakra-ui/core";
 import NextLink from "next/link";
-// import { StreamPlot } from "../components/Stream.tsx";
 
 export const Container = (props) => (
   <Box width="full" maxWidth="1280px" mx="auto" px={6} {...props} />

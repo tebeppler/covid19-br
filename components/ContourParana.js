@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Runtime, Inspector } from "@observablehq/runtime";
 import notebook from "../from_observablehq/contour_parana/index";
 
-class ParanaContour extends Component {
+class ContourParana extends Component {
   componentDidMount() {
     new Runtime().module(notebook, (name) => {
       if (name === "map")
@@ -19,4 +19,4 @@ class ParanaContour extends Component {
   }
 }
 
-export default ParanaContour;
+export default ContourParana;

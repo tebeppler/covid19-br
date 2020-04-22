@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 
-import ParanaContour from "../components/ContourParana";
+import ContourBrazil from "../components/ContourBrazil";
 import ParanaFilledInteractive from "../components/DailyMapFilledParana";
 import TopGrowing from "../components/TopGrowing";
 import BrazilInteractive from "../components/DailyMapSpikesBrazil";
@@ -16,15 +16,11 @@ import {
   Grid,
   Divider,
   Flex,
-  Stack,
   Link,
 } from "@chakra-ui/core";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { DiGithubBadge } from "react-icons/di";
-import { MdAccessibility, MdPalette, MdGrain, MdEmail } from "react-icons/md";
-import * as Chakra from "@chakra-ui/core";
-import NextLink from "next/link";
+import ContourParana from "../components/ContourParana";
 
 export const Container = (props) => (
   <Box width="full" maxWidth="1280px" mx="auto" px={6} {...props} />
@@ -122,15 +118,27 @@ export default () => {
         <StatesLines />
       </Box>
 
-      <Divider my={8} />
+      <Divider mt={4} />
 
-      <Container>
+      <Box maxW="3xl" mx="auto">
+        <ContourBrazil />
+      </Box>
+
+      <Divider mt={4} />
+
+      <Box maxW="3xl" mx="auto">
+        <ContourParana />
+      </Box>
+
+      {/* <Divider my={8} /> */}
+
+      {/* <Container>
         <Box maxW="xl" mx="auto" textAlign="center">
           <Heading as="h1" size="sm" fontWeight="semibold">
             Aqui vem os outros gráficos
       </Heading>
         </Box>
-      </Container>
+      </Container> */}
 
       {/* <Box as="section" pt={40} pb={24}>
         <Container>

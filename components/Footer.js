@@ -22,7 +22,7 @@ export const FooterContainer = (props) => (
 
 const Container = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   flex-flow: row wrap;
   align-items: center;
   min-height:"4rem";
@@ -35,55 +35,42 @@ const Footer = (props) => {
     <FooterContainer bg={bg[colorMode]} {...props}>
       <Box h={2}></Box>
       <Container>
-        <Flex align="center" color="gray.500">
-          <a href="https://www.c3sl.ufpr.br/">
-            <Image
-              height="12"
-              width="auto"
-              objectFit="cover"
-              src="/img_c3sl.png"
-              alt="C3SL"
-            />
-          </a>
-          <a href="http://www.exatas.ufpr.br/portal/en/">
-            <Image
-              height="12"
-              width="auto"
-              objectFit="cover"
-              src="/img_exatas.png"
-              alt="Exatas UFPR"
-            />
-          </a>
-          <a href="http://web.leg.ufpr.br/">
-            <Image
-              height="12"
-              width="auto"
-              objectFit="cover"
-              src="/img_leg.png"
-              alt="Laboratório de Estatística e Geoinformação"
-            />
-          </a>
+        <a href="https://www.c3sl.ufpr.br/">
           <Image
             height="12"
             width="auto"
             objectFit="cover"
-            src="/img_labdsi.png"
-            alt="Laboratório de Design 
-de Sistemas de Informação"
+            src="/img_c3sl.png"
+            alt="C3SL"
           />
-        </Flex>
+        </a>
+        <a href="http://www.exatas.ufpr.br/portal/en/">
+          <Image
+            height="12"
+            width="auto"
+            objectFit="cover"
+            src="/img_exatas.png"
+            alt="Exatas UFPR"
+          />
+        </a>
+        <a href="http://web.leg.ufpr.br/">
+          <Image
+            height="12"
+            width="auto"
+            objectFit="cover"
+            src="/img_leg.png"
+            alt="Laboratório de Estatística e Geoinformação"
+          />
+        </a>
+        <Image
+          height="12"
+          width="auto"
+          objectFit="cover"
+          src="/img_labdsi.png"
+          alt="Laboratório de Design 
+de Sistemas de Informação"
+        />
 
-        <Box alignItems="center">
-          <a href="https://www.ufpr.br/portalufpr/">
-            <Image
-              height="12"
-              width="auto"
-              objectFit="cover"
-              src="/img_ufpr.png"
-              alt="UFPR"
-            />
-          </a>
-        </Box>
       </Container>
     </FooterContainer>
   );

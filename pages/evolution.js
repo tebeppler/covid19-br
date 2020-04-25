@@ -9,17 +9,26 @@ import Footer from "../components/Footer";
 import { SectionTitle, SectionSubtitle } from "../components/SectionTitle";
 import StyledFlex from "../components/StyledFlex";
 
-export const TextImageContainer = (props) => (
+const TextImageContainer = (props) => (
   <Box maxW="3xl" mx="auto" py="1rem" {...props} />
 );
 
-export const Contribution = (props) => (
+const Contribution = (props) => (
   <Text fontSize="12px" mx="4px" textAlign="center" {...props} />
 );
 
-export const CenteredImage = (props) => (
+const AdaptiveBox = (props) => (
+  <Box width={[
+    "100%", // base
+    "50%", // 480px upwards
+  ]} py="1rem" {...props} />
+);
+
+const CenteredImage = (props) => (
   <Image mx="auto" {...props} />
 );
+
+
 
 export default () => {
   return (
@@ -29,27 +38,19 @@ export default () => {
 
       <TextImageContainer>
         <StyledFlex>
-          <Box width={[
-            "100%", // base
-            "50%", // 480px upwards
-          ]}>
+          <AdaptiveBox>
             <SectionTitle>Evolução do número de casos e óbitos.</SectionTitle>
             <SectionSubtitle>munícipios</SectionSubtitle>
             <Box size={4} />
             <CenteredImage src="/figs/brasil-maiscasos.png" />
-          </Box>
+          </AdaptiveBox>
 
-          <Divider />
-
-          <Box width={[
-            "100%", // base
-            "50%", // 480px upwards
-          ]}>
+          <AdaptiveBox>
             <SectionTitle>Taxa de casos por 100mil habitantes.</SectionTitle>
             <SectionSubtitle>munícipios</SectionSubtitle>
             <Box size={4} />
             <CenteredImage src="/figs/brasil-maiscasos-taxas.png" />
-          </Box>
+          </AdaptiveBox>
         </StyledFlex>
       </TextImageContainer>
 
@@ -83,35 +84,23 @@ export default () => {
       <Box bg="black" pb="8px">
         <TextImageContainer>
           <StyledFlex>
-            <Box width={[
-              "100%", // base
-              "50%", // 480px upwards
-            ]}>
-
+            <AdaptiveBox>
               <SectionTitle color="white">Previsão do número casos.</SectionTitle>
               <SectionSubtitle>Brasil (acumulado e diário)</SectionSubtitle>
-
               <Box size={4} />
               <CenteredImage src="/figs/Projec_casos_140420.JPG" />
+            </AdaptiveBox>
 
-            </Box>
-
-            <Box width={[
-              "100%", // base
-              "50%", // 480px upwards
-            ]}>
+            <AdaptiveBox>
               <SectionTitle color="white">Previsão do número de óbitos.</SectionTitle>
               <SectionSubtitle>Brasil (acumulado e diário)</SectionSubtitle>
               <Box size={4} />
               <CenteredImage src="/figs/Projec_mortes_140420.JPG" />
-            </Box>
+            </AdaptiveBox>
 
           </StyledFlex>
           <Contribution color="white" mt="4px">Contribuição: Prof. Marco Antonio Leonel Caetano (Insper-SP)</Contribution>
-
         </TextImageContainer>
-
-
       </Box>
 
       <TextImageContainer>

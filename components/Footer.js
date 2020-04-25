@@ -84,7 +84,8 @@ de Sistemas de Informação"
       <Image
         mt="8px"
         mx="auto"
-        src="https://hitcounter.pythonanywhere.com/count/tag.svg?url=http%3A%2F%2Fcovid.c3sl.ufpr.br%2F" alt="Hits" />
+        src="https://hitcounter.pythonanywhere.com/count/tag.svg?url=http%3A%2F%2Fcovid.c3sl.ufpr.br%2F"
+        alt="Hits" />
     </div>
   );
 };

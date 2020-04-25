@@ -36,7 +36,7 @@ export default () => {
             <SectionTitle>Evolução do número de casos e óbitos.</SectionTitle>
             <SectionSubtitle>munícipios</SectionSubtitle>
             <Box size={4} />
-            <CenteredImage src="http://covid.c3sl.ufpr.br/figs/brasil-maiscasos.png" />
+            <CenteredImage src="/figs/brasil-maiscasos.png" />
           </Box>
 
           <Divider />
@@ -48,7 +48,7 @@ export default () => {
             <SectionTitle>Taxa de casos por 100mil habitantes.</SectionTitle>
             <SectionSubtitle>munícipios</SectionSubtitle>
             <Box size={4} />
-            <CenteredImage src="http://covid.c3sl.ufpr.br/figs/brasil-maiscasos-taxas.png" />
+            <CenteredImage src="/figs/brasil-maiscasos-taxas.png" />
           </Box>
         </StyledFlex>
       </TextImageContainer>
@@ -59,7 +59,7 @@ export default () => {
         <SectionTitle>Evolução da taxa de óbitos por casos.</SectionTitle>
         <SectionSubtitle>regiões do Brasil</SectionSubtitle>
         <Box size={4} />
-        <CenteredImage src="http://covid.c3sl.ufpr.br/figs/letalidade-regioes.png" alignContent="center" />
+        <CenteredImage src="/figs/letalidade-regioes.png" alignContent="center" />
       </TextImageContainer>
 
       <Box bg="black" py="12px">
@@ -67,7 +67,7 @@ export default () => {
           <SectionTitle color="white">Evolução do número de casos por distâncias.</SectionTitle>
           <SectionSubtitle>estados e regiões do Brasil</SectionSubtitle>
           <Box size={4} />
-          <CenteredImage src="http://covid.c3sl.ufpr.br/figs/Covid_Onda_Animada.gif" />
+          <CenteredImage src="/figs/Covid_Onda_Animada.gif" />
           <Contribution color="white">Contribuição: Prof. Marco Antonio Leonel Caetano (Insper-SP)</Contribution>
         </TextImageContainer>
       </Box>
@@ -76,7 +76,7 @@ export default () => {
         <SectionTitle>Evolução do número de casos.</SectionTitle>
         <SectionSubtitle>estados e regiões do Brasil</SectionSubtitle>
         <Box size={4} />
-        <Image src="http://covid.c3sl.ufpr.br/figs/data-casos-obitos-estado-regiao.png" />
+        <Image src="/figs/data-casos-obitos-estado-regiao.png" />
       </TextImageContainer>
 
 
@@ -92,7 +92,7 @@ export default () => {
               <SectionSubtitle>Brasil (acumulado e diário)</SectionSubtitle>
 
               <Box size={4} />
-              <CenteredImage src="http://covid.c3sl.ufpr.br/figs/Projec_casos_140420.JPG" />
+              <CenteredImage src="/figs/Projec_casos_140420.JPG" />
 
             </Box>
 
@@ -103,7 +103,7 @@ export default () => {
               <SectionTitle color="white">Previsão do número de óbitos.</SectionTitle>
               <SectionSubtitle>Brasil (acumulado e diário)</SectionSubtitle>
               <Box size={4} />
-              <CenteredImage src="http://covid.c3sl.ufpr.br/figs/Projec_mortes_140420.JPG" />
+              <CenteredImage src="/figs/Projec_mortes_140420.JPG" />
             </Box>
 
           </StyledFlex>
@@ -118,7 +118,7 @@ export default () => {
         <SectionTitle>Evolução do número de casos e óbitos.</SectionTitle>
         <SectionSubtitle>Brasil e outros países</SectionSubtitle>
         <Box size={4} />
-        <CenteredImage src="http://covid.c3sl.ufpr.br/figs/world-country-data.png" />
+        <CenteredImage src="/figs/world-country-data.png" />
       </TextImageContainer>
 
       <Divider />
@@ -127,7 +127,7 @@ export default () => {
         <SectionTitle>Taxa de óbitos vs número de testes por casos.</SectionTitle>
         <SectionSubtitle>países com 50 óbitos ou mais</SectionSubtitle>
         <Box size={4} />
-        <CenteredImage src="http://covid.c3sl.ufpr.br/figs/dispersion-death-tests.png" />
+        <CenteredImage src="/figs/dispersion-death-tests.png" />
       </TextImageContainer>
 
       <Footer />

@@ -11,11 +11,12 @@ import { DefaultSeo } from "next-seo";
 import { useRouter } from "next/router";
 import React from "react";
 import seo from "../seo.config";
+
 // import { initGA, logPageView } from "../components/Analytics";
 
-const Main = (props) => <Box as="main" mx="auto" mb="3rem" {...props} />;
+// const Main = (props) => <div as="main" mx="auto" mb="3rem" {...props} />;
 
-const HomeLayout = ({ children }) => <Box>{children}</Box>;
+const HomeLayout = ({ children }) => <div>{children}</div>;
 
 export default ({ Component, pageProps }) => {
   // const [isOpen, setIsOpen] = useState(false);

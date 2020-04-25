@@ -11,7 +11,7 @@ import {
 import { jsx } from "@emotion/core";
 import { Container } from "../pages";
 
-export const HeaderContainer = (props) => (
+const HeaderContainer = (props) => (
   <Box
     pos="fixed"
     as="header"
@@ -25,6 +25,8 @@ export const HeaderContainer = (props) => (
     {...props}
   />
 );
+
+const marginX = 1;
 
 const Header = (props) => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -50,26 +52,14 @@ const Header = (props) => {
             </a>
           </Box>
 
-          <Box alignItems="center">
-            <a href="https://www.ufpr.br/portalufpr/">
-              <Image
-                height="12"
-                width="auto"
-                objectFit="cover"
-                src="/img_ufpr.png"
-                alt="UFPR"
-              />
-            </a>
-          </Box>
-
-          {/* <Flex align="center" color="gray.500">
-            <Link ml="2" href="/" style={{ textDecoration: "none" }}>
-              <Button variant="ghost">Home</Button>
+          <Flex align="center" color="gray.500">
+            <Link mx={marginX} href="/evolution" style={{ textDecoration: "none" }}>
+              <Button variant="ghost">Evolução</Button>
             </Link>
-            <Link ml="2" href="/about" style={{ textDecoration: "none" }}>
-              <Button variant="ghost">Brasil</Button>
+            <Link mx={marginX} href="/about" style={{ textDecoration: "none" }}>
+              <Button variant="ghost">Sobre</Button>
             </Link>
-            <IconButton
+            {/* <IconButton
               aria-label={`Switch to ${
                 colorMode === "light" ? "dark" : "light"
               } mode`}
@@ -78,8 +68,17 @@ const Header = (props) => {
               fontSize="20px"
               onClick={toggleColorMode}
               icon={colorMode === "light" ? "moon" : "sun"}
-            />
-          </Flex> */}
+            /> */}
+            <Link ml={marginX} href="https://www.ufpr.br/portalufpr/">
+              <Image
+                height="12"
+                width="auto"
+                objectFit="cover"
+                src="/img_ufpr.png"
+                alt="UFPR"
+              />
+            </Link>
+          </Flex>
         </Flex>
       </Container>
     </HeaderContainer>

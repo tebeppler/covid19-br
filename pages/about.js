@@ -10,6 +10,7 @@ import ContourParana from "../components/ContourParana";
 import ContourBrazil from "../components/ContourBrazil";
 import RelatedLinksList from "../components/RelatedLinksList";
 import { SectionTitleAbout } from "../components/SectionTitle";
+import GetCovidDataComp from "../components/GetCovidDataComp";
 
 export default () => {
   return (
@@ -40,19 +41,23 @@ export default () => {
 
       <Divider my={4} />
 
-      <Box maxW="3xl" mx="auto">
-        <SectionTitleAbout>Casos no Brasil</SectionTitleAbout>
-        <Box size={4} />
-        <ContourBrazil />
-      </Box>
+      <GetCovidDataComp>
 
-      <Divider my={4} />
+        <Box maxW="3xl" mx="auto">
+          <SectionTitleAbout>Casos no Brasil</SectionTitleAbout>
+          <Box size={4} />
+          <ContourBrazil />
+        </Box>
 
-      <Box maxW="3xl" mx="auto">
-        <SectionTitleAbout>Casos no Paraná</SectionTitleAbout>
-        <Box size={4} />
-        <ContourParana />
-      </Box>
+        <Divider my={4} />
+
+        <Box maxW="3xl" mx="auto">
+          <SectionTitleAbout>Casos no Paraná</SectionTitleAbout>
+          <Box size={4} />
+          <ContourParana />
+        </Box>
+
+      </GetCovidDataComp>
 
       <Footer />
 

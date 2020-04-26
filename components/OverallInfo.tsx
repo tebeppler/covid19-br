@@ -28,7 +28,8 @@ class OverallInfo extends Component {
     const casesBrazil = Math.max(...brazil.map((d) => +d.confirmed));
     const deathsBrazil = Math.max(...brazil.map((d) => +d.deaths));
 
-    const parana = data.filter((d) => d.state === "PR");
+    // efficient, instead of re-filtering the full list
+    const parana = brazil.filter((d) => d.state === "PR");
     const casesParana = Math.max(...parana.map((d) => +d.confirmed));
     const deathsParana = Math.max(...parana.map((d) => +d.deaths));
 

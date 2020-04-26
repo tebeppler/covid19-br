@@ -1,3 +1,5 @@
+import * as d3 from "d3";
+
 // https://observablehq.com/@d3/color-legend@692
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -250,15 +252,15 @@ How about swatches for ordinal color scales? Both variable-width swatches and [c
           const thresholds = color.thresholds
             ? color.thresholds() // scaleQuantize
             : color.quantiles
-            ? color.quantiles() // scaleQuantile
-            : color.domain(); // scaleThreshold
+              ? color.quantiles() // scaleQuantile
+              : color.domain(); // scaleThreshold
 
           const thresholdFormat =
             tickFormat === undefined
               ? (d) => d
               : typeof tickFormat === "string"
-              ? d3.format(tickFormat)
-              : tickFormat;
+                ? d3.format(tickFormat)
+                : tickFormat;
 
           x = d3
             .scaleLinear()
@@ -298,7 +300,7 @@ How about swatches for ordinal color scales? Both variable-width swatches and [c
             .attr("height", height - marginTop - marginBottom)
             .attr("fill", color);
 
-          tickAdjust = () => {};
+          tickAdjust = () => { };
         }
 
         svg
@@ -378,8 +380,8 @@ How about swatches for ordinal color scales? Both variable-width swatches and [c
             </style>
             <div style="width: 100%; columns: ${columns};">
               ${color.domain().map((value) => {
-                const label = format(value);
-                return html`<div class="${id}-item">
+            const label = format(value);
+            return html`<div class="${id}-item">
                   <div
                     class="${id}-swatch"
                     style="background:${color(value)};"
@@ -391,7 +393,7 @@ How about swatches for ordinal color scales? Both variable-width swatches and [c
                     ${document.createTextNode(label)}
                   </div>
                 </div>`;
-              })}
+          })}
             </div>
           </div>`;
 
@@ -415,13 +417,13 @@ How about swatches for ordinal color scales? Both variable-width swatches and [c
           </style>
           <div>
             ${color
-              .domain()
-              .map(
-                (value) =>
-                  html`<span class="${id}" style="--color: ${color(value)}"
+            .domain()
+            .map(
+              (value) =>
+                html`<span class="${id}" style="--color: ${color(value)}"
                     >${document.createTextNode(format(value))}</span
                   >`
-              )}
+            )}
           </div>
         </div>`;
       };
@@ -442,8 +444,6 @@ How about swatches for ordinal color scales? Both variable-width swatches and [c
       return canvas;
     };
   });
-  main.variable(observer("d3")).define("d3", ["require"], function (require) {
-    return require("d3@5");
-  });
+  main.variable(observer("d3")).define("d3", d3);
   return main;
 }

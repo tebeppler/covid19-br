@@ -47,6 +47,7 @@ const Header = (props) => {
                 width="auto"
                 objectFit="cover"
                 src="/img_logo.png"
+                
                 alt="Portal COVID UFPR"
               />
             </a>

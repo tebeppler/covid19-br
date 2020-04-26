@@ -335,7 +335,7 @@ import {checkbox} from "@jashkenas/inputs"
       }
     )
   });
-  main.variable(observer("input")).define("input", ["html", "d3format"], function (html, d3format) {
+  main.variable(observer("input")).define("input", ["html"], function (html) {
     return (
       function input(config) {
         let {
@@ -377,7 +377,6 @@ import {checkbox} from "@jashkenas/inputs"
           form.append(
             html`<div style="font-size: 0.85rem; font-style: italic;">${description}</div>`
           );
-        if (format) format = typeof format === "function" ? format : d3format.format(format);
         if (action) {
           action(form);
         } else {
@@ -417,11 +416,6 @@ import {checkbox} from "@jashkenas/inputs"
         form.append(wrapper);
         return form;
       }
-    )
-  });
-  main.variable(observer("d3format")).define("d3format", ["require"], function (require) {
-    return (
-      require("d3-format@1")
     )
   });
   return main;

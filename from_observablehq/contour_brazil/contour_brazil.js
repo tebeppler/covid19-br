@@ -1,7 +1,7 @@
 // https://observablehq.com/@bernaferrari/brazil-contour-covid-19-map@2144
 import * as topojson from "topojson-client";
 import * as d3 from "d3";
-import { parseDataCityCovid, getDataCityCovid } from "../../utils/fetcher.ts";
+import { parseDataCityCovid, getDataCityCovid, getMapFrom } from "../../utils/fetcher.ts";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -364,10 +364,8 @@ export default function define(runtime, observer) {
       }
     )
   });
-  main.variable(observer("brasil")).define("brasil", ["d3"], function (d3) {
-    return (
-      d3.json("/br.json")
-    )
+  main.variable(observer("brasil")).define("brasil", async function () {
+    return await getMapFrom("br");
   });
   main.variable(observer("topojson")).define("topojson", topojson);
   main.variable(observer("d3")).define("d3", d3);

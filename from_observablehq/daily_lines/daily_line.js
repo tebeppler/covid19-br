@@ -252,7 +252,7 @@ Fonte: [covid19-br](https://brasil.io/api/dataset/covid19)`
   });
   main.variable(observer("margin")).define("margin", function () {
     return (
-      { top: 40, right: 40, bottom: 40, left: 40 }
+      { top: 40, right: 40, bottom: 40, left: 60 }
     )
   });
   main.variable(observer("x")).define("x", ["d3", "data", "margin", "w"], function (d3, data, margin, w) {

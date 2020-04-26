@@ -1,28 +1,52 @@
-import { DSVRowArray, csv, utcParse } from "d3";
+import { DSVRowArray, csv, utcParse, json, values } from "d3";
 import { group } from "d3-array";
 
-const isDeveloping = false;
-
-let csvCovid: DSVRowArray = null;
-export const getCovidCSV = async (): Promise<DSVRowArray> => {
-  if (csvCovid) {
-    return csvCovid;
+let cached: Object;
+export const loadDataIntoCache = async (): Promise<any> => {
+  if (cached) {
+    return cached;
   }
-  csvCovid = await csv(
+
+  cached = {};
+  // fetch in parallel
+  await Promise.all([
+    getCovidCSV(),
+    getCitiesCSV(),
+    getMapFrom("br"),
+    getMapFrom("pr"),
+  ]);
+
+  return cached;
+};
+
+const isDeveloping = true;
+
+export const getCovidCSV = async (): Promise<DSVRowArray> => {
+  if (cached != null && cached["covid"] != undefined) {
+    return cached["covid"];
+  }
+  cached["covid"] = await csv(
     isDeveloping
       ? "/caso.csv"
       : "https://brasil.io/dataset/covid19/caso?format=csv"
   );
-  return csvCovid;
+  return cached["covid"];
 };
 
-let csvCities: DSVRowArray = null;
 export const getCitiesCSV = async (): Promise<DSVRowArray> => {
-  if (csvCities) {
-    return csvCities;
+  if (cached != null && cached["cities"] != undefined) {
+    return cached["cities"];
   }
-  csvCities = await csv("/municipios_mini.csv");
-  return csvCities;
+  cached["cities"] = await csv("/municipios_mini.csv");
+  return cached["cities"];
+};
+
+export const getMapFrom = async (place: string): Promise<DSVRowArray> => {
+  if (cached != null && cached[place] != undefined) {
+    return cached[place];
+  }
+  cached[place] = await json(`/${place}.json`);
+  return cached[place];
 };
 
 interface cities {
@@ -51,7 +75,6 @@ export const getDataCityCovid = async (
   // longitude: -50.3133
   // capital: "0"
   // codigo_uf: "41"
-
   const rawCityData = await getCitiesCSV();
 
   let citiesFiltered;
@@ -70,8 +93,6 @@ export const getDataCityCovid = async (
     };
   });
 
-  const parseDate = utcParse("%Y-%m-%d");
-
   // date: "2020-04-18"
   // state: "PR"
   // city: "Almirante Tamandaré"
@@ -83,7 +104,6 @@ export const getDataCityCovid = async (
   // city_ibge_code: 4100400
   // confirmed_per_100k_inhabitants: "5.05804"
   // death_rate: ""
-
   let rawData = await getCovidCSV();
 
   let dataFiltered;
@@ -121,7 +141,8 @@ export const getDataCityCovid = async (
 export const parseDataCityCovid = async (
   currentData: Array<cities>,
   // shouldBacktrack is useless when only most recent data matters
-  shouldBacktrack: boolean = true
+  shouldBacktrack: boolean = true,
+  groupedData: Map<string, Array<cities>> = null
 ): Promise<Array<Array<cities>>> => {
   // sanity check
   let data_city_covid: Array<cities>;
@@ -132,55 +153,62 @@ export const parseDataCityCovid = async (
   }
 
   // data
-  let data_with_holes = Array.from(
-    group(data_city_covid, (d) => d.rawDate),
-    ([, value]) => value
-  )
-    .sort((a, b) => a.date - b.date)
-    .reverse();
+  let data_with_holes =
+    groupedData !== undefined && groupedData !== null
+      ? groupedData
+      : group(data_city_covid, (d) => d.rawDate);
 
-  let mutableArray: Array<Array<cities>> = [...data_with_holes].filter(
-    (d) => d != null
-  );
+  let mutableArray: Array<Array<cities>> = Array.from(
+    [...data_with_holes],
+    ([, value]) => value
+  ).filter((d) => d != null).reverse();
+
+  let keys = [];
+  for (let [key] of data_with_holes.entries()) {
+    keys.push(key);
+  }
+  keys = keys.reverse();
 
   // copy the data forward when nothing was reported
-  for (let i = 1; i < data_with_holes.length; i++) {
-    for (let j = 0; j < mutableArray[i - 1].length; j++) {
-      let found = mutableArray[i].find(
-        (element: { state: string; city: string }) =>
-          element.state === mutableArray[i - 1][j].state &&
-          element.city === mutableArray[i - 1][j].city
+  for (let i = 1; i < keys.length; i++) {
+    let values = data_with_holes.get(keys[i]);
+
+    for (let j = 0; j < data_with_holes.get(keys[i - 1]).length; j++) {
+      let previousValue = data_with_holes.get(keys[i - 1])[j];
+
+      let found = values.find(
+        (d) => d.city_ibge_code === previousValue.city_ibge_code
       );
       if (found !== undefined) {
         continue;
       }
 
-      mutableArray[i].push({ ...data_with_holes[i - 1][j] });
+      mutableArray[i].push({ ...previousValue });
     }
   }
 
   if (shouldBacktrack) {
     // now backtrack to fill the data with zeros
-    for (let i = data_with_holes.length - 2; i >= 0; i--) {
-      for (let j = 0; j < mutableArray[i + 1].length; j++) {
-        let found = mutableArray[i].find(
-          (element: { state: string; city: string }) =>
-            element.state === mutableArray[i + 1][j].state &&
-            element.city === mutableArray[i + 1][j].city
+    for (let i = keys.length - 2; i >= 0; i--) {
+      let values = data_with_holes.get(keys[i]);
+
+      for (let j = 0; j < data_with_holes.get(keys[i + 1]).length; j++) {
+        let nextValue = data_with_holes.get(keys[i + 1])[j];
+
+        let found = values.find(
+          (d) => d.city_ibge_code === nextValue.city_ibge_code
         );
+
         if (found !== undefined) {
           continue;
         }
 
-        let newCase = { ...data_with_holes[i + 1][j] };
+        let newCase = { ...nextValue };
         newCase.confirmed = 0;
+        newCase.deaths = 0;
+        newCase.rawDate = values[0].rawDate;
         mutableArray[i].push(newCase);
       }
-
-      // trying to sort // moved to the return, else it won't sort the last
-      // mutableArray[i] = mutableArray[i].sort((a, b) =>
-      //   `${a.state}${a.city}`.localeCompare(`${b.state}${b.city}`)
-      // );
     }
   }
 

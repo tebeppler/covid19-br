@@ -1,7 +1,7 @@
 // https://observablehq.com/@bernaferrari/parana-contour-cases-map-covid-19@1878
 import * as topojson from "topojson-client";
 import * as d3 from "d3";
-import { parseDataCityCovid, getDataCityCovid } from "../../utils/fetcher.ts";
+import { parseDataCityCovid, getDataCityCovid, getMapFrom } from "../../utils/fetcher.ts";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -534,8 +534,8 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     .define("path", ["d3", "projection"], function (d3, projection) {
       return d3.geoPath().projection(projection);
     });
-  main.variable(observer("brasil")).define("brasil", ["d3"], function (d3) {
-    return d3.json("/pr.json");
+  main.variable(observer("brasil")).define("brasil", async function () {
+    return await getMapFrom("pr");
   });
   main.variable(observer("topojson")).define("topojson", topojson);
   main.variable(observer("d3")).define("d3", d3);

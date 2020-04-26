@@ -2,8 +2,9 @@
 import define1 from "../shared_d3/scrubber.js";
 import define2 from "../shared_d3/inputs.js";
 import * as d3 from "d3";
+import * as d3array from "d3-array";
 import * as topojson from "topojson-client";
-import { getDataCityCovid, parseDataCityCovid } from "../../utils/fetcher.ts";
+import { getDataCityCovid, parseDataCityCovid, getMapFrom } from "../../utils/fetcher.ts";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -385,15 +386,14 @@ form output {
   main.variable(observer("data_city_covid")).define("data_city_covid", async function () {
     return await getDataCityCovid(null, null);
   });
-  main.variable(observer("data"))
-    .define("data", ["data_city_covid"], async function (data_city_covid) {
-      return await parseDataCityCovid(data_city_covid);
-    }
-    );
+  main.variable(observer("data")).define("data", ["data_city_covid", "grouped_data"], async function (data_city_covid, grouped_data) {
+    return await parseDataCityCovid(data_city_covid, grouped_data);
+  });
+  main.variable(observer("grouped_data")).define("grouped_data", ["data_city_covid"], function (data_city_covid) {
+    return d3array.group(data_city_covid, (d) => d.rawDate);
+  });
   main.variable(observer("breakpoint")).define("breakpoint", function () {
-    return (
-      500
-    )
+    return 500;
   });
   main.variable(observer("maxRadius")).define("maxRadius", ["w", "breakpoint"], function (w, breakpoint) {
     return (
@@ -405,13 +405,12 @@ form output {
       [...data[data.length - 1]]
     )
   });
-  main.variable(observer("dates")).define("dates", ["data_city_covid", "parseDate"], function (data_city_covid, parseDate) {
-    return (
-      data_city_covid.map(d => d.rawDate)
-        .filter((value, index, self) => self.indexOf(value) === index)
-        .map(d => parseDate(d))
-        .reverse()
-    )
+  main.variable(observer("dates")).define("dates", ["grouped_data", "parseDate"], function (grouped_data, parseDate) {
+    let keys = [];
+    for (let [key] of grouped_data.entries()) {
+      keys.push(key);
+    }
+    return keys.map(d => parseDate(d)).reverse();
   });
   main.variable(observer("parseDate")).define("parseDate", ["d3"], function (d3) {
     return (
@@ -518,8 +517,8 @@ form output {
       }
     )
   });
-  main.variable(observer("brasil")).define("brasil", ["d3"], async function (d3) {
-    return await d3.json("/br.json");
+  main.variable(observer("brasil")).define("brasil", async function () {
+    return await getMapFrom("br");
   });
   const child1 = runtime.module(define1);
   main.import("Scrubber", child1);

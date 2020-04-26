@@ -27,8 +27,6 @@ class TestTest extends Component {
       return <Box p={6} flex="2" rounded="10px">Didn't load</Box>;
     }
 
-    console.log(data);
-
     return (
       <Box p={6} flex="2" rounded="10px">
         Loaded!

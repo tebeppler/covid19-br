@@ -4,7 +4,7 @@ import define2 from "../shared_d3/inputs.js";
 import define3 from "./colorlegend.js";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
-import { parseDataCityCovid, getDataCityCovid } from "../../utils/fetcher.ts";
+import { parseDataCityCovid, getDataCityCovid, getMapFrom } from "../../utils/fetcher.ts";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -670,8 +670,8 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     .define("path", ["d3", "projection"], function (d3, projection) {
       return d3.geoPath().projection(projection);
     });
-  main.variable(observer("brasil")).define("brasil", ["d3"], function (d3) {
-    return d3.json("/pr.json");
+  main.variable(observer("brasil")).define("brasil", async function () {
+    return await getMapFrom("pr");
   });
   const child1 = runtime.module(define1);
   main.import("Scrubber", child1);

@@ -1,12 +1,12 @@
 import React, { Component, Fragment } from "react";
-import { getCovidCSV } from "../utils/fetcher";
+import { loadDataIntoCache } from "../utils/fetcher";
 import { Box, Flex, Spinner, Text } from "@chakra-ui/core";
 
 class GetCovidDataComp extends Component {
   state = { data: null };
 
   componentDidMount() {
-    getCovidCSV().then((d) => this.setState({ data: d }));
+    loadDataIntoCache().then((d) => this.setState({ data: d }));
   }
 
   render() {

@@ -82,7 +82,7 @@ Fonte: [covid19-br](https://brasil.io/api/dataset/covid19)`
   );
   main.variable(observer("data_from_csv")).define("data_from_csv", ["d3"], async function (d3) {
     return (
-      (await getCovidCSV()).filter(d => d.place_type === "state")
+      (await getCovidCSV()).filter(d => d.place_type === "s" || d.place_type === "state")
     )
   });
   main.variable(observer("data")).define("data", ["data_from_csv", "d3", "indicator"], function (data_from_csv, d3, indicator) {

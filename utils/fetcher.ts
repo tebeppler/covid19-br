@@ -96,7 +96,7 @@ export const getDataCityCovid = async (
   // date: "2020-04-18"
   // state: "PR"
   // city: "Almirante Tamandaré"
-  // place_type: "city"
+  // place_type: "c"
   // confirmed: 6
   // deaths: 0
   // is_last: "True"
@@ -111,14 +111,16 @@ export const getDataCityCovid = async (
     // select a state
     dataFiltered = rawData.filter(
       (d) =>
-        d.place_type === "city" &&
+        (d.place_type === "c" || d.place_type === "city") &&
         d.city_ibge_code != "" &&
         d.state == stateShortName
     );
   } else {
     // full country
     dataFiltered = rawData.filter(
-      (d) => d.place_type === "city" && d.city_ibge_code != ""
+      (d) =>
+        (d.place_type === "c" || d.place_type === "city") &&
+        d.city_ibge_code != ""
     );
   }
 
@@ -161,7 +163,9 @@ export const parseDataCityCovid = async (
   let mutableArray: Array<Array<cities>> = Array.from(
     [...data_with_holes],
     ([, value]) => value
-  ).filter((d) => d != null).reverse();
+  )
+    .filter((d) => d != null)
+    .reverse();
 
   let keys = [];
   for (let [key] of data_with_holes.entries()) {

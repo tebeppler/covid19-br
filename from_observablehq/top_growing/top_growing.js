@@ -377,7 +377,7 @@ export default function define(runtime, observer) {
     .variable(observer("confirmedRaw"))
     .define("confirmedRaw", ["d3"], async function (d3) {
       const dd = (await getCovidCSV()).filter(
-        (d) => d.place_type === "city" && d.city_ibge_code != ""
+        (d) => (d.place_type === "c" || d.place_type === "city") && d.city_ibge_code != ""
       );
 
       dd.forEach(function (d) {

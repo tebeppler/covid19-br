@@ -63,15 +63,7 @@ export default () => {
         <CenteredImage src="/figs/letalidade-regioes.png" alignContent="center" />
       </TextImageContainer>
 
-      <Box bg="black" py="12px">
-        <TextImageContainer>
-          <SectionTitle color="white">Evolução do número de casos por distâncias.</SectionTitle>
-          <SectionSubtitle>estados e regiões do Brasil</SectionSubtitle>
-          <Box size={4} />
-          <CenteredImage src="/figs/Covid_Onda_Animada.gif" />
-          <Contribution color="white">Contribuição: Prof. Marco Antonio Leonel Caetano (Insper-SP)</Contribution>
-        </TextImageContainer>
-      </Box>
+      <Divider />
 
       <TextImageContainer>
         <SectionTitle>Evolução do número de casos.</SectionTitle>

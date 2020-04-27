@@ -1,3 +1,4 @@
+import { getCityFromCode } from "./fetcher";
 import { DSVRowArray, csv, utcParse, json, values } from "d3";
 import { group } from "d3-array";
 
@@ -33,11 +34,14 @@ export const getCovidCSV = async (): Promise<DSVRowArray> => {
   return cached["covid"];
 };
 
+export let cityFromCode: Map<Number, String> = new Map();
+
 export const getCitiesCSV = async (): Promise<DSVRowArray> => {
   if (cached != null && cached["cities"] != undefined) {
     return cached["cities"];
   }
-  cached["cities"] = await csv("/municipios_mini.csv");
+  cached["cities"] = await csv("/municipios.csv");
+  cached["cities"].forEach((d) => (cityFromCode[+d.city_ibge_code] = d.city));
   return cached["cities"];
 };
 
@@ -87,23 +91,24 @@ export const getDataCityCovid = async (
 
   const data_city = citiesFiltered.map((d) => {
     return {
+      city: d.city,
       latitude: +d["latitude"],
       longitude: +d["longitude"],
-      codigo_ibge: +d["codigo_ibge"],
+      city_ibge_code: +d["city_ibge_code"],
     };
   });
 
   // date: "2020-04-18"
   // state: "PR"
-  // city: "Almirante Tamandaré"
-  // place_type: "c"
+  // city: "Almirante Tamandaré" <-- removed
+  // place_type: "c" <-- replaced "city" with "c"
   // confirmed: 6
   // deaths: 0
-  // is_last: "True"
-  // estimated_population_2019: "118623"
+  // is_last: "True" <-- removed
+  // estimated_population_2019: "118623" <-- removed
   // city_ibge_code: 4100400
   // confirmed_per_100k_inhabitants: "5.05804"
-  // death_rate: ""
+  // death_rate: "" <-- removed
   let rawData = await getCovidCSV();
 
   let dataFiltered;
@@ -127,7 +132,6 @@ export const getDataCityCovid = async (
   const data_covid = dataFiltered.map((d) => ({
     rawDate: d.date,
     state: d.state,
-    city: d.city,
     is_last: d.is_last,
     confirmed: +d.confirmed,
     deaths: +d.deaths,
@@ -135,7 +139,7 @@ export const getDataCityCovid = async (
   }));
 
   return data_covid.map((d) => {
-    let value = data_city.find((e) => d.city_ibge_code === e.codigo_ibge);
+    let value = data_city.find((e) => d.city_ibge_code === e.city_ibge_code);
     return { ...d, ...value };
   });
 };

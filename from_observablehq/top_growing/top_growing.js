@@ -2,7 +2,7 @@
 import define1 from "../shared_d3/syncviews.js";
 import * as d3 from "d3";
 import * as d3array from "d3-array";
-import { getCovidCSV } from "../../utils/fetcher.ts";
+import { getCovidCSV, cityFromCode } from "../../utils/fetcher.ts";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -146,7 +146,7 @@ export default function define(runtime, observer) {
           .append("h4")
           .style("font-size", ".9em")
           .style("font-weight", "bold")
-          .html((d) => d[d.length - 1].city);
+          .html((d) => cityFromCode[d[d.length - 1].city_ibge_code]);
 
         facets
           .append("p")
@@ -278,7 +278,7 @@ export default function define(runtime, observer) {
       ["confirmedByCountryTimeseries", "d3"],
       function (confirmedByCountryTimeseries, d3) {
         return confirmedByCountryTimeseries.map((d) =>
-          d3.stack().keys(["deaths", "deaths"])(d)
+          d3.stack().keys(["deaths", ""])(d)
         );
       }
     );
@@ -289,9 +289,9 @@ export default function define(runtime, observer) {
       ["confirmedByCountryTimeseries", "stackedDeathsAndRecovered"],
       function (confirmedByCountryTimeseries, stackedDeathsAndRecovered) {
         return confirmedByCountryTimeseries.map((d) => {
-          const city = d[0].city;
+          const city = d[0].city_ibge_code;
           d.stack = stackedDeathsAndRecovered.find(
-            (d) => d[0][0].data.city === city
+            (d) => d[0][0].data.city_ibge_code === city
           );
           return d;
         });
@@ -315,7 +315,7 @@ export default function define(runtime, observer) {
         confirmedWithNew.flat();
 
         const byCountry = Array.from(
-          d3array.group(confirmedWithNew.flat(), (d) => `${d.city}${d.state}`),
+          d3array.group(confirmedWithNew.flat(), (d) => `${d.city_ibge_code}`),
           ([key, value]) => value
         );
 
@@ -370,14 +370,14 @@ export default function define(runtime, observer) {
       selectedState
     ) {
       return confirmedRaw.map((d) =>
-        d.filter((dd) => dd.state === selectedState)
+        d.filter((dd) => dd.state === selectedState && dd.city_ibge_code > 100)
       );
     });
   main
     .variable(observer("confirmedRaw"))
     .define("confirmedRaw", ["d3"], async function (d3) {
       const dd = (await getCovidCSV()).filter(
-        (d) => (d.place_type === "c" || d.place_type === "city") && d.city_ibge_code != ""
+        (d) => (d.place_type === "c" || d.place_type === "city" || d.state === "PR") && d.city_ibge_code != ""
       );
 
       dd.forEach(function (d) {
@@ -400,8 +400,7 @@ export default function define(runtime, observer) {
         for (let j = 0; j < mutableArray[i - 1].length; j++) {
           let found = mutableArray[i].find(
             (element) =>
-              element.state === mutableArray[i - 1][j].state &&
-              element.city === mutableArray[i - 1][j].city
+              element.city_ibge_code === mutableArray[i - 1][j].city_ibge_code
           );
           if (found !== undefined) {
             continue;

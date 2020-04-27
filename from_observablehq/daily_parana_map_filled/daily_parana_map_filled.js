@@ -122,12 +122,11 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           .attr("stroke-width", "1px");
 
         svg
-          .selectAll(".subunit")
+          .selectAll(".subunitpr")
           .data(estado.features)
           .enter()
           .append("path")
           .attr("stroke", "#BBB")
-          .attr("class", "county")
           .style("stroke-width", (d) => {
             let find = currentData.find(
               (dd) => dd.city_ibge_code === d.properties.cod
@@ -427,11 +426,6 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
         font-size: 10px;
         margin: 0 auto;
       }
-      .subunit {
-        fill: #f4f4f4;
-        stroke: #999;
-        stroke-width: 0.5;
-      }
       .place {
         fill: rgba(0, 0, 0, 0.8);
         stroke: none;
@@ -650,12 +644,12 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   main
     .variable(observer("statesOuter"))
     .define("statesOuter", ["topojson", "brasil"], function (topojson, brasil) {
-      return topojson.mesh(brasil, brasil.objects["41"], (a, b) => a === b);
+      return topojson.feature(brasil, brasil.objects["41"]);
     });
   main
     .variable(observer("statesInner"))
     .define("statesInner", ["topojson", "brasil"], function (topojson, brasil) {
-      return topojson.mesh(brasil, brasil.objects["41"], (a, b) => a !== b);
+      return topojson.mesh(brasil, brasil.objects["41"], (a, b) => a === b);
     });
   main.variable(observer("sFormat")).define("sFormat", ["d3"], function (d3) {
     return d3.format(".1s");

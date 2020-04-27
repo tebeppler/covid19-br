@@ -24,17 +24,28 @@ class OverallInfo extends Component {
       return <Box p={6} flex="2" rounded="10px"></Box>;
     }
 
-    const brazil: Array<any> = data.filter((d) => d.state !== undefined);
-    const casesBrazil = Math.max(...brazil.map((d) => +d.confirmed));
-    const deathsBrazil = Math.max(...brazil.map((d) => +d.deaths));
+    const brazil: Array<any> = data.filter(
+      (d) =>
+        (d.place_type === "s" || d.place_type === "state") &&
+        d.is_last === "True"
+    );
+
+    const casesBrazil = brazil
+      .map((d) => +d.confirmed)
+      .reduce((total, num) => total + num);
+    const deathsBrazil = brazil
+      .map((d) => +d.deaths)
+      .reduce((total, num) => total + num);
 
     // efficient, instead of re-filtering the full list
-    const parana = brazil.filter((d) => d.state === "PR");
-    const casesParana = Math.max(...parana.map((d) => +d.confirmed));
-    const deathsParana = Math.max(...parana.map((d) => +d.deaths));
+    const parana = brazil.filter(
+      (d) => d.state === "PR" && d.is_last === "True"
+    );
+    const casesParana = parana[0].confirmed;
+    const deathsParana = parana[0].deaths;
 
     const lastUpdated = brazil[0].date;
-    const parser = d3.utcParse("%Y-%m-%d");
+    const parser = d3.timeParse("%Y-%m-%d");
     const date = parser(lastUpdated);
 
     return (

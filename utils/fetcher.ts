@@ -1,5 +1,4 @@
-import { getCityFromCode } from "./fetcher";
-import { DSVRowArray, csv, utcParse, json, values } from "d3";
+import { DSVRowArray, csv, json } from "d3";
 import { group } from "d3-array";
 
 let cached: Object;

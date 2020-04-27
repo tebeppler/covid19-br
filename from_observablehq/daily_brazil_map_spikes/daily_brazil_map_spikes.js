@@ -414,7 +414,7 @@ form output {
   });
   main.variable(observer("parseDate")).define("parseDate", ["d3"], function (d3) {
     return (
-      d3.utcParse("%Y-%m-%d")
+      d3.timeParse("%Y-%m-%d")
     )
   });
   main.variable(observer("dateExtent")).define("dateExtent", ["d3", "data_city_covid", "parseDate"], function (d3, data_city_covid, parseDate) {

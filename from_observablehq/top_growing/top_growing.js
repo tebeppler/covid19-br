@@ -278,7 +278,7 @@ export default function define(runtime, observer) {
       ["confirmedByCountryTimeseries", "d3"],
       function (confirmedByCountryTimeseries, d3) {
         return confirmedByCountryTimeseries.map((d) =>
-          d3.stack().keys(["deaths", ""])(d)
+          d3.stack().keys(["deaths"])(d)
         );
       }
     );
@@ -480,7 +480,6 @@ Everything else is maps, chart-drawing functions, scales, formats and lookup lis
             .data((d) => {
               yScale.domain([0, d3.max(d, (dd) => dd.confirmed)]);
               d.stack[0].y = yScale.domain();
-              d.stack[1].y = yScale.domain();
               return d.stack;
             })
             .join("path")

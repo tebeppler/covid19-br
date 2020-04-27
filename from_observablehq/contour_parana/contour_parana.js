@@ -522,7 +522,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   main
     .variable(observer("parseDate"))
     .define("parseDate", ["d3"], function (d3) {
-      return d3.utcParse("%Y-%m-%d");
+      return d3.timeParse("%Y-%m-%d");
     });
   main
     .variable(observer("estado"))

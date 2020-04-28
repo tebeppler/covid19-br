@@ -1,13 +1,12 @@
 import { DSVRowArray, csv, json } from "d3";
 import { group } from "d3-array";
 
-let cached: Object;
+const cached: Object = {};
 export const loadDataIntoCache = async (): Promise<any> => {
-  if (cached) {
+  if (cached !== undefined && cached["cities"] !== undefined) {
     return cached;
   }
 
-  cached = {};
   // fetch in parallel
   await Promise.all([
     getCovidCSV(),
@@ -22,7 +21,7 @@ export const loadDataIntoCache = async (): Promise<any> => {
 const isDeveloping = true;
 
 export const getCovidCSV = async (): Promise<DSVRowArray> => {
-  if (cached != null && cached["covid"] != undefined) {
+  if (cached["covid"] !== undefined) {
     return cached["covid"];
   }
   cached["covid"] = await csv(
@@ -36,7 +35,7 @@ export const getCovidCSV = async (): Promise<DSVRowArray> => {
 export let cityFromCode: Map<Number, String> = new Map();
 
 export const getCitiesCSV = async (): Promise<DSVRowArray> => {
-  if (cached != null && cached["cities"] != undefined) {
+  if (cached["cities"] !== undefined) {
     return cached["cities"];
   }
   cached["cities"] = await csv("/municipios.csv");
@@ -45,7 +44,7 @@ export const getCitiesCSV = async (): Promise<DSVRowArray> => {
 };
 
 export const getMapFrom = async (place: string): Promise<DSVRowArray> => {
-  if (cached != null && cached[place] != undefined) {
+  if (cached[place] !== undefined) {
     return cached[place];
   }
   cached[place] = await json(`/${place}.json`);

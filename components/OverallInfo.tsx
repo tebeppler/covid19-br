@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { getCovidCSV } from "../utils/fetcher";
 import { Box, Stat, StatLabel, StatGroup } from "@chakra-ui/core";
 import styled from "@emotion/styled";
@@ -10,25 +10,29 @@ const StyledText = styled.p`
   font-weight: bold;
 `;
 
-class OverallInfo extends Component {
+class OverallInfo extends React.Component {
   state = { data: null };
 
   componentDidMount() {
-    getCovidCSV().then((d) => this.setState({ data: d }));
+    d3.csv("/caso_shrink.csv").then((d) => this.setState({ data: d }));
   }
 
   render() {
     const data = this.state["data"];
 
     if (data === null) {
-      return <Box p={6} flex="2" rounded="10px"></Box>;
+      return (
+        <Box p={6} flex="1" rounded="10px">
+        </Box>
+      );
     }
 
-    const brazil: Array<any> = data.filter(
-      (d) =>
-        (d.place_type === "s" || d.place_type === "state") &&
-        d.is_last === "True"
-    );
+    const brazil = data;
+    // const brazil: Array<any> = data.filter(
+    //   (d) =>
+    //     (d.place_type === "s" || d.place_type === "state") &&
+    //     d.is_last === "True"
+    // );
 
     const casesBrazil = brazil
       .map((d) => +d.confirmed)
@@ -38,9 +42,7 @@ class OverallInfo extends Component {
       .reduce((total, num) => total + num);
 
     // efficient, instead of re-filtering the full list
-    const parana = brazil.filter(
-      (d) => d.state === "PR" && d.is_last === "True"
-    );
+    const parana = brazil.filter((d) => d.state === "PR");
     const casesParana = parana[0].confirmed;
     const deathsParana = parana[0].deaths;
 
@@ -49,7 +51,7 @@ class OverallInfo extends Component {
     const date = parser(lastUpdated);
 
     return (
-      <Box p={6} flex="2" rounded="10px">
+      <Box p={6} flex="1" rounded="10px">
         <StatGroup rounded="8px" borderWidth="1px" p={4} mt={2}>
           <Stat>
             <StatLabel>Casos no Brasil</StatLabel>

@@ -26,40 +26,39 @@ export default () => {
   return (
     <Box mb={8}>
       <Header />
-      <GetCovidDataComp>
-
-        <Box mx="auto" maxW="3xl" pt={40} pb={16}>
-          <Box d={{ md: "flex" }} alignItems="flex-start">
-            <Box p={6} flex="2">
-              <Heading as="h1" size="xl" fontWeight="semibold">
-                Portal COVID-19 no
+      <Box mx="auto" maxW="3xl" pt={40} pb={16}>
+        <Box d={{ md: "flex" }} alignItems="flex-start">
+          <Box p={6} flex="1">
+            <Heading as="h1" size="xl" fontWeight="semibold">
+              Portal COVID-19 no
               <Box as="span" color="purple.500">
-                  {" "}
+                {" "}
                 Paraná
               </Box>
-                <Box size={4} />
-              </Heading>
-              <Heading as="h4" size="sm" fontSize={12} fontWeight="normal">
-                <p>
-                  Este portal tem por objetivo agregar informações atualizadas,
-                  modelos estatísticos, visualizações de dados e links úteis sobre
-                  a pandemia COVID19 no Brasil, mais especialmente no Estado do
-                  Paraná.
+              <Box size={4} />
+            </Heading>
+            <Heading as="h4" size="sm" fontSize={12} fontWeight="normal">
+              <p>
+                Este portal tem por objetivo agregar informações atualizadas,
+                modelos estatísticos, visualizações de dados e links úteis sobre
+                a pandemia COVID19 no Brasil, mais especialmente no Estado do
+                Paraná.
               </p>
-                <Box size={2} />
-                <p>
-                  O conteúdo disponibilizado é um esforço conjunto de
-                  pesquisadores dos Departamentos de Estatística, Informática,
-                  Física, Matemática, Design e Saúde da Universidade Federal do
-                  Paraná e pesquisador do Insper-SP, com o apoio da Direção do
-                  Setor de Ciências Exatas da UFPR.
+              <Box size={2} />
+              <p>
+                O conteúdo disponibilizado é um esforço conjunto de
+                pesquisadores dos Departamentos de Estatística, Informática,
+                Física, Matemática, Design e Saúde da Universidade Federal do
+                Paraná e pesquisador do Insper-SP, com o apoio da Direção do
+                Setor de Ciências Exatas da UFPR.
               </p>
-              </Heading>
-            </Box>
-            <Box size={8} />
-            <OverallInfo />
+            </Heading>
           </Box>
+          <Box size={8} />
+          <OverallInfo />
         </Box>
+      </Box>
+      <GetCovidDataComp>
 
         <Box bg="#f4f4f4" mx="auto" py={4}>
           <Heading size="sm" textAlign="center">

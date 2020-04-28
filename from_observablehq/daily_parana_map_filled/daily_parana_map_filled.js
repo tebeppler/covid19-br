@@ -23,7 +23,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           { label: "casos", value: "confirmed" },
           { label: "mortes", value: "deaths" },
         ],
-        value: "confirmed",
+        value: "deaths",
       });
     });
   main.variable(observer("confirmed_or_deaths")).define("confirmed_or_deaths", ["Generators", "viewof confirmed_or_deaths"], (G, _) => G.input(_));

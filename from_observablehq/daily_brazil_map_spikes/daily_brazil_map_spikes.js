@@ -24,7 +24,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           { label: "casos", value: "confirmed" },
           { label: "mortes", value: "deaths" },
         ],
-        value: "confirmed",
+        value: "deaths",
       })
     )
   });

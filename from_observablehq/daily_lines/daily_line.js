@@ -23,7 +23,7 @@ Fonte: [covid19-br](https://brasil.io/api/dataset/covid19)`
           { label: "mortes", value: "deaths" },
           { label: "casos/100 mil hab", value: "confirmed_per_100k_inhabitants" },
         ],
-        value: "confirmed",
+        value: "deaths",
       })
     )
   });

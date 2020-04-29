@@ -163,7 +163,7 @@ export const parseDataCityCovid = async (
       : group(data_city_covid, (d) => d.rawDate);
 
   let mutableArray: Array<Array<cities>> = Array.from(
-    [...data_with_holes],
+    data_with_holes,
     ([, value]) => value
   )
     .filter((d) => d != null)

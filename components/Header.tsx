@@ -3,9 +3,6 @@ import {
   Box,
   Button,
   Flex,
-  Image,
-  IconButton,
-  useColorMode,
   Link,
 } from "@chakra-ui/core";
 import { jsx } from "@emotion/core";
@@ -29,10 +26,8 @@ const HeaderContainer = (props) => (
 const marginX = 1;
 
 const Header = (props) => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const bg = { light: "white", dark: "gray.800" };
   return (
-    <HeaderContainer bg={bg[colorMode]} {...props}>
+    <HeaderContainer bg="white" {...props}>
       <Container h="100%">
         <Flex
           size="100%"
@@ -42,13 +37,11 @@ const Header = (props) => {
         >
           <Box display="flex" alignItems="center">
             <a href="/">
-              <Image
+              <img
                 height="12"
-                width="auto"
-                objectFit="cover"
+                width="96"
                 src="/img_logo.png"
-                
-                alt="Portal COVID UFPR"
+                alt="Portal"
               />
             </a>
           </Box>
@@ -71,10 +64,9 @@ const Header = (props) => {
               icon={colorMode === "light" ? "moon" : "sun"}
             /> */}
             <Link ml={marginX} href="https://www.ufpr.br/portalufpr/">
-              <Image
+              <img
                 height="12"
-                width="auto"
-                objectFit="cover"
+                width="56"
                 src="/img_ufpr.png"
                 alt="UFPR"
               />

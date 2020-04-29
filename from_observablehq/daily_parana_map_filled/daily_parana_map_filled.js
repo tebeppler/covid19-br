@@ -535,7 +535,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
         .range([`hsla(57, 100%, 50%, 0.36)`, `hsla(7, 100%, 50%, 0.57)`]);
     });
   main.variable(observer("delay")).define("delay", function () {
-    return 100;
+    return 200;
   });
   main
     .variable(observer("maxCases"))

@@ -1,20 +1,23 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 
-import ParanaFilledInteractive from "../components/DailyMapFilledParana";
-import TopGrowing from "../components/TopGrowing";
-import BrazilInteractive from "../components/DailyMapSpikesBrazil";
-import StatesLines from "../components/DailyLinesBrazil";
-import OverallInfo from "../components/OverallInfo.tsx";
+import ParanaFilledInteractive from "../components/d3/DailyMapFilledParana";
+import TopGrowing from "../components/d3/TopGrowing";
+import BrazilInteractive from "../components/d3/DailyMapSpikesBrazil";
+import StatesLines from "../components/d3/DailyLinesBrazil";
+import OverallInfo from "../components/OverallInfo";
 import GetCovidDataComp from "../components/GetCovidDataComp";
 
 import {
   Box,
+  Button,
+  ButtonGroup,
   Heading,
   Text,
   Divider,
   Link,
 } from "@chakra-ui/core";
+import { } from "react-icons"
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Box, Flex, Link, Heading } from "@chakra-ui/core";
+import { Box, Flex, Link } from "@chakra-ui/core";
 import styled from "@emotion/styled";
 import { FaNewspaper, FaInfoCircle, FaFileAlt } from "react-icons/fa";
 

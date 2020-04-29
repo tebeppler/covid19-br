@@ -1,12 +1,7 @@
-import {
-  Box,
-  Image,
-  Divider,
-  Text
-} from "@chakra-ui/core";
+import { Box, Image, Divider, Text } from "@chakra-ui/core";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { SectionTitle, SectionSubtitle } from "../components/SectionTitle";
+import { SectionTitle, SectionSubtitle } from "../components/SectionTitles";
 import StyledFlex from "../components/StyledFlex";
 
 const TextImageContainer = (props) => (
@@ -18,17 +13,17 @@ const Contribution = (props) => (
 );
 
 const AdaptiveBox = (props) => (
-  <Box width={[
-    "100%", // base
-    "50%", // 480px upwards
-  ]} py="1rem" {...props} />
+  <Box
+    width={[
+      "100%", // base
+      "50%", // 480px upwards
+    ]}
+    py="1rem"
+    {...props}
+  />
 );
 
-const CenteredImage = (props) => (
-  <Image mx="auto" {...props} />
-);
-
-
+const CenteredImage = (props) => <Image mx="auto" {...props} />;
 
 export default () => {
   return (
@@ -60,7 +55,10 @@ export default () => {
         <SectionTitle>Evolução da taxa de óbitos por casos.</SectionTitle>
         <SectionSubtitle>regiões do Brasil</SectionSubtitle>
         <Box size={4} />
-        <CenteredImage src="/figs/letalidade-regioes.png" alignContent="center" />
+        <CenteredImage
+          src="/figs/letalidade-regioes.png"
+          alignContent="center"
+        />
       </TextImageContainer>
 
       <Divider />
@@ -72,26 +70,30 @@ export default () => {
         <Image src="/figs/data-casos-obitos-estado-regiao.png" />
       </TextImageContainer>
 
-
       <Box bg="black" pb="8px">
         <TextImageContainer>
           <StyledFlex>
             <AdaptiveBox>
-              <SectionTitle color="white">Previsão do número casos.</SectionTitle>
+              <SectionTitle color="white">
+                Previsão do número casos.
+              </SectionTitle>
               <SectionSubtitle>Brasil (acumulado e diário)</SectionSubtitle>
               <Box size={4} />
               <CenteredImage src="/figs/Projec_casos_140420.JPG" />
             </AdaptiveBox>
 
             <AdaptiveBox>
-              <SectionTitle color="white">Previsão do número de óbitos.</SectionTitle>
+              <SectionTitle color="white">
+                Previsão do número de óbitos.
+              </SectionTitle>
               <SectionSubtitle>Brasil (acumulado e diário)</SectionSubtitle>
               <Box size={4} />
               <CenteredImage src="/figs/Projec_mortes_140420.JPG" />
             </AdaptiveBox>
-
           </StyledFlex>
-          <Contribution color="white" mt="4px">Contribuição: Prof. Marco Antonio Leonel Caetano (Insper-SP)</Contribution>
+          <Contribution color="white" mt="4px">
+            Contribuição: Prof. Marco Antonio Leonel Caetano (Insper-SP)
+          </Contribution>
         </TextImageContainer>
       </Box>
 
@@ -105,14 +107,15 @@ export default () => {
       <Divider />
 
       <TextImageContainer>
-        <SectionTitle>Taxa de óbitos vs número de testes por casos.</SectionTitle>
+        <SectionTitle>
+          Taxa de óbitos vs número de testes por casos.
+        </SectionTitle>
         <SectionSubtitle>países com 50 óbitos ou mais</SectionSubtitle>
         <Box size={4} />
         <CenteredImage src="/figs/dispersion-death-tests.png" />
       </TextImageContainer>
 
       <Footer />
-
     </Box>
   );
 };

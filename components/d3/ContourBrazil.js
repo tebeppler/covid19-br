@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Runtime, Inspector } from "@observablehq/runtime";
-import notebook from "../from_observablehq/contour_brazil/index";
+import notebook from "../../from_observablehq/contour_brazil/index";
 
 class ContourBrazil extends Component {
   componentDidMount() {

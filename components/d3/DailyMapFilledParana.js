@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Runtime, Inspector } from "@observablehq/runtime";
 import { Box, Flex } from "@chakra-ui/core";
-import notebook from "../from_observablehq/daily_parana_map_filled/index";
+import notebook from "../../from_observablehq/daily_parana_map_filled/index";
 import styled from "@emotion/styled";
 
 const Container = styled.div`

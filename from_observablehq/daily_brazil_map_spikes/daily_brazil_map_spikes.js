@@ -375,7 +375,7 @@ form output {
   });
   main.variable(observer("delay")).define("delay", function () {
     return (
-      100
+      200
     )
   });
   main.variable(observer("maxCases")).define("maxCases", ["d3", "data_city_covid", "confirmed_or_deaths"], function (d3, data_city_covid, confirmed_or_deaths) {

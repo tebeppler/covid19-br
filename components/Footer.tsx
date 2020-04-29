@@ -1,11 +1,5 @@
 /** @jsx jsx */
-import {
-  Box,
-  Flex,
-  Image,
-  useColorMode,
-  Text,
-} from "@chakra-ui/core";
+import { Box, Text } from "@chakra-ui/core";
 import { jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 
@@ -25,68 +19,64 @@ const Container = styled.div`
   justify-content: center;
   flex-flow: row wrap;
   align-items: center;
-  min-height:"4rem";
+  min-height: "4rem";
 `;
 
 const Footer = (props) => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const bg = { light: "white", dark: "gray.800" };
   return (
     <div>
-      <FooterContainer bg={bg[colorMode]} {...props}>
-        <Box h={2}></Box>
+      <FooterContainer bg="white" {...props}>
+        <div style={{ height: 2 }} />
         <Container>
           <a href="https://www.c3sl.ufpr.br/">
-            <Image
-              height="12"
-              width="auto"
-              objectFit="cover"
-              src="/img_c3sl.png"
-              alt="C3SL"
-            />
+            <img height="12" width="85" src="/img_c3sl.png" alt="C3SL" />
           </a>
           <a href="http://www.exatas.ufpr.br/portal/en/">
-            <Image
+            <img
               height="12"
-              width="auto"
-              objectFit="cover"
+              width="85"
               src="/img_exatas.png"
               alt="Exatas UFPR"
             />
           </a>
           <a href="http://web.leg.ufpr.br/">
-            <Image
+            <img
               height="12"
-              width="auto"
-              objectFit="cover"
+              width="85"
               src="/img_leg.png"
               alt="Laboratório de Estatística e Geoinformação"
             />
           </a>
-          <Image
+          <img
             height="12"
-            width="auto"
-            objectFit="cover"
+            width="85"
+            style={{ padding: "12px" }}
+            // padding of 24 so that 62+24 ~= 85 (all other images are 85)
             src="/img_labdsi.png"
             alt="Laboratório de Design 
 de Sistemas de Informação"
           />
-
         </Container>
       </FooterContainer>
-      <Box mt={4} textAlign="center">
+      <div style={{ marginTop: 4, textAlign: "center" }}>
         <Text fontSize="xs">
           Developed & Designed by{" "}
           <a href="https://github.com/bernaferrari">Bernardo Ferrari</a> &
           Rafael Ancara
         </Text>
-      </Box>
-      <Image
-        mt="8px"
-        w="56px"
-        mx="auto"
+      </div>
+      <img
+        width="64px"
+        height="16px"
+        style={{
+          display: "block",
+          marginLeft: "auto",
+          marginRight: "auto",
+          marginTop: "8px",
+        }}
         src="https://hitcounter.pythonanywhere.com/count/tag.svg?url=http%3A%2F%2Fcovid.c3sl.ufpr.br%2F"
-        alt="Hits" />
+        alt="Hits"
+      />
     </div>
   );
 };

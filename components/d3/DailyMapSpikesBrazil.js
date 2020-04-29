@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Runtime, Inspector } from "@observablehq/runtime";
-import notebook from "../from_observablehq/daily_brazil_map_spikes/index";
+import notebook from "../../from_observablehq/daily_brazil_map_spikes/index";
 import styled from "@emotion/styled";
 import { Box, Flex } from "@chakra-ui/core";
 

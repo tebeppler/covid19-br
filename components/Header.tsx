@@ -48,7 +48,7 @@ const Header = (props) => {
 
           <Flex align="center" color="gray.500">
             <Link mx={marginX} href="/evolution" style={{ textDecoration: "none" }}>
-              <Button variant="ghost">Projeções</Button>
+              <Button variant="ghost">Monitoramento</Button>
             </Link>
             <Link mx={marginX} href="/docs" style={{ textDecoration: "none" }}>
               <Button variant="ghost">Documentos</Button>

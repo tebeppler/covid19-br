@@ -87,6 +87,12 @@ function getCorrespondingColor(kind: DocumentKind) {
 class RelatedLinksList extends Component {
   data: Array<RelatedDocument> = [
     new RelatedDocument(
+      "Strong correlations between power-law growth of COVID-19 in four continents and the inefficiency of soft quarantine strategies",
+      DocumentKind.Article,
+      "Manchein, C. et al., CHAOS 30, 041102 (2020)",
+      "https://aip.scitation.org/doi/pdf/10.1063/5.0009454?download=true&"
+    ),
+    new RelatedDocument(
       "A quem servem os dados?",
       DocumentKind.Article,
       "Sunye, M.S., SBC Horizontes, 2020",

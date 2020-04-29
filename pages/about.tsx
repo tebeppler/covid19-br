@@ -31,19 +31,6 @@ export default () => {
 
       <Divider my={4} />
 
-      <Box maxW="3xl" mx="auto">
-        <a href="https://pinsis.c3sl.ufpr.br/corona-parana">
-          <Image
-            maxW="350px"
-            maxH="350px"
-            mx="auto"
-            src="/mapainterativo.jpg"
-          />
-        </a>
-      </Box>
-
-      <Divider my={4} />
-
       <GetCovidDataComp>
         <Box maxW="3xl" mx="auto">
           <SectionTitleAbout>Casos no Brasil</SectionTitleAbout>

@@ -1,8 +1,9 @@
-import { Box, Image, Divider, Text } from "@chakra-ui/core";
+import { Box, Flex, Image, Divider, Text, Button } from "@chakra-ui/core";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { SectionTitle, SectionSubtitle } from "../components/SectionTitles";
 import StyledFlex from "../components/StyledFlex";
+import Link from "next";
 
 const TextImageContainer = (props) => (
   <Box maxW="3xl" mx="auto" py="1rem" {...props} />
@@ -23,6 +24,54 @@ const AdaptiveBox = (props) => (
   />
 );
 
+function AccessOtherSite(props) {
+  return (
+    <Flex
+      width={[
+        "100%", // base
+        "48%", // 480px upwards
+      ]}
+      rounded={8}
+      borderWidth="1px"
+      direction="column"
+      padding="8px"
+      m="1%"
+    >
+      <a href="http://leg.ufpr.br/~wagner/covid/">
+        <Flex>
+          <Image rounded="4px" size="96px" src={props.src} alt="Preview" />
+          <Box pl="8px" width="100%">
+            <p
+              style={{
+                overflow: "hidden",
+                width: "90%",
+                fontWeight: "bold",
+                fontSize: "18px",
+              }}
+            >
+              {props.title}
+            </p>
+            <Box h="8px" />
+            <p
+              style={{
+                overflow: "hidden",
+                width: "90%",
+                lineHeight: 1.125,
+                minHeight: "2.25em",
+              }}
+            >
+              {props.subtitle}
+            </p>
+          </Box>
+        </Flex>
+
+        <Box h="8px" />
+        <Button w="100%">{props.access}</Button>
+      </a>
+    </Flex>
+  );
+}
+
 const CenteredImage = (props) => <Image mx="auto" {...props} />;
 
 export default () => {
@@ -30,6 +79,25 @@ export default () => {
     <Box mb={8}>
       <Header />
       <Box size="70px" />
+
+      <Box maxW="3xl" mx="auto" py="1rem">
+        <StyledFlex>
+          <AccessOtherSite
+            title="Monitoramento do R(t)"
+            subtitle="Monitoramento da pandemia no Brasil e regiões."
+            access="Acessar site"
+            src="/wagner_preview.jpg"
+          />
+          <AccessOtherSite
+            title="Mapa Interativo"
+            subtitle="Situação no Paraná."
+            access="Acessar mapa"
+            src="/mapa_preview.jpg"
+          />
+        </StyledFlex>
+      </Box>
+
+      <Divider />
 
       <TextImageContainer>
         <StyledFlex>

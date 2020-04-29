@@ -50,6 +50,9 @@ const Header = (props) => {
             <Link mx={marginX} href="/evolution" style={{ textDecoration: "none" }}>
               <Button variant="ghost">Projeções</Button>
             </Link>
+            <Link mx={marginX} href="/docs" style={{ textDecoration: "none" }}>
+              <Button variant="ghost">Documentos</Button>
+            </Link>
             <Link mx={marginX} href="/about" style={{ textDecoration: "none" }}>
               <Button variant="ghost">Sobre</Button>
             </Link>

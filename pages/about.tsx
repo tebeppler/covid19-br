@@ -12,7 +12,15 @@ export default () => {
     <Box mb={8}>
       <Header />
 
-      <Box maxW="xl" mx="auto" pt="6rem">
+      <Box maxW="3xl" mx="auto" pt="6rem">
+        <SectionTitleAbout>Documentos e Links</SectionTitleAbout>
+        <Box size={4} />
+        <RelatedLinksList />
+      </Box>
+
+      <Divider my={4} />
+
+      <Box maxW="xl" mx="auto">
         <SectionTitleAbout>Fale conosco</SectionTitleAbout>
         <Box size={4} />
         <Box as="p" mx="8px" textAlign="center">

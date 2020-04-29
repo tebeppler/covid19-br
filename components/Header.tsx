@@ -1,10 +1,5 @@
 /** @jsx jsx */
-import {
-  Box,
-  Button,
-  Flex,
-  Link,
-} from "@chakra-ui/core";
+import { Box, Button, Flex, Link } from "@chakra-ui/core";
 import { jsx } from "@emotion/core";
 import { Container } from "../pages";
 
@@ -37,42 +32,23 @@ const Header = (props) => {
         >
           <Box display="flex" alignItems="center">
             <a href="/">
-              <img
-                height="12"
-                width="96"
-                src="/img_logo.png"
-                alt="Portal"
-              />
+              <img height="12" width="96" src="/img_logo.png" alt="Portal" />
             </a>
           </Box>
 
           <Flex align="center" color="gray.500">
-            <Link mx={marginX} href="/evolution" style={{ textDecoration: "none" }}>
+            <Link
+              mx={marginX}
+              href="/evolution"
+              style={{ textDecoration: "none" }}
+            >
               <Button variant="ghost">Monitoramento</Button>
             </Link>
-            <Link mx={marginX} href="/docs" style={{ textDecoration: "none" }}>
-              <Button variant="ghost">Documentos</Button>
-            </Link>
             <Link mx={marginX} href="/about" style={{ textDecoration: "none" }}>
-              <Button variant="ghost">Sobre</Button>
+              <Button variant="ghost">Links</Button>
             </Link>
-            {/* <IconButton
-              aria-label={`Switch to ${
-                colorMode === "light" ? "dark" : "light"
-              } mode`}
-              variant="ghost"
-              ml="2"
-              fontSize="20px"
-              onClick={toggleColorMode}
-              icon={colorMode === "light" ? "moon" : "sun"}
-            /> */}
             <Link ml={marginX} href="https://www.ufpr.br/portalufpr/">
-              <img
-                height="12"
-                width="56"
-                src="/img_ufpr.png"
-                alt="UFPR"
-              />
+              <img height="12" width="56" src="/img_ufpr.png" alt="UFPR" />
             </Link>
           </Flex>
         </Flex>

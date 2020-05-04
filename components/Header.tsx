@@ -45,7 +45,7 @@ const Header = (props) => {
               <Button variant="ghost">Monitoramento</Button>
             </Link>
             <Link mx={marginX} href="/about" style={{ textDecoration: "none" }}>
-              <Button variant="ghost">Links</Button>
+              <Button variant="ghost">Outros</Button>
             </Link>
             <Link ml={marginX} href="https://www.ufpr.br/portalufpr/">
               <img height="12" width="56" src="/img_ufpr.png" alt="UFPR" />

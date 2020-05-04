@@ -99,6 +99,12 @@ class RelatedLinksList extends Component {
       "https://aip.scitation.org/doi/pdf/10.1063/5.0009454?download=true&"
     ),
     new RelatedDocument(
+      "Mapa interativo",
+      DocumentKind.Info,
+      "Dante Aléo/Prof. André Grégio (DInf@UFPR)",
+      "https://pinsis.c3sl.ufpr.br/corona-parana"
+    ),
+    new RelatedDocument(
       "A quem servem os dados?",
       DocumentKind.Article,
       "Sunye, M.S., SBC Horizontes, 2020",

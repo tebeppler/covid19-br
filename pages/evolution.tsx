@@ -37,7 +37,7 @@ function AccessOtherSite(props) {
       padding="8px"
       m="1%"
     >
-      <a href="http://leg.ufpr.br/~wagner/covid/">
+      <a href={props.url}>
         <Flex>
           <Image rounded="4px" size="96px" src={props.src} alt="Preview" />
           <Box pl="8px" width="100%">
@@ -84,15 +84,17 @@ export default () => {
         <StyledFlex>
           <AccessOtherSite
             title="Monitoramento do R(t)"
-            subtitle="Monitoramento da pandemia no Brasil e regiões."
+            subtitle="Monitoramento estatístico no Brasil e regiões."
             access="Acessar site"
             src="/wagner_preview.jpg"
+            url="http://leg.ufpr.br/~wagner/covid/"
           />
           <AccessOtherSite
-            title="Mapa Interativo"
-            subtitle="Situação no Paraná."
-            access="Acessar mapa"
-            src="/mapa_preview.jpg"
+            title="Monitoramento geral"
+            subtitle="Monitoramento geral no Brasil e regiões"
+            access="Acessar site"
+            src="/monitoramento_preview.jpg"
+            url="https://lineu96.github.io/st/img/proj_covid/covid19.html"
           />
         </StyledFlex>
       </Box>

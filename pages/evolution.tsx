@@ -66,17 +66,17 @@ export default () => {
           <StyledFlex>
             <AccessOtherSite
               title="Monitoramento do R(t)"
-              subtitle="Monitoramento estatístico no Brasil e regiões."
+              subtitle="Monitoramento estatístico no Brasil e Paraná."
               access="Acessar site"
               src="/wagner_preview.jpg"
               url="http://leg.ufpr.br/~wagner/covid/"
             />
             <AccessOtherSite
               title="Monitoramento geral"
-              subtitle="Monitoramento geral no Brasil e regiões"
+              subtitle="Monitoramento geral no Brasil e Paraná"
               access="Acessar site"
               src="/monitoramento_preview.jpg"
-              url="https://lineu96.github.io/st/img/proj_covid/covid19.html"
+              url="https://lineu96.github.io/covid19/"
             />
           </StyledFlex>
         </Box>

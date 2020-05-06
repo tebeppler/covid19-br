@@ -1,11 +1,10 @@
 import { Box, Flex, Image, Divider, Text, Button } from "@chakra-ui/core";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import {
-  SectionTitleAbout
-} from "../components/SectionTitles";
+import { SectionTitleAbout } from "../components/SectionTitles";
 import StyledFlex from "../components/StyledFlex";
 import RelatedLinksList from "../components/RelatedLinksList";
+import OtherSources from "../components/OtherSources";
 
 function AccessOtherSite(props) {
   return (
@@ -81,13 +80,21 @@ export default () => {
             />
           </StyledFlex>
         </Box>
-        <Divider mb={4} />
-      </Box>
 
-      <Box maxW="3xl" mx="auto">
-        <SectionTitleAbout>Documentos e Links</SectionTitleAbout>
-        <Box size={4} />
-        <RelatedLinksList />
+        <Divider mb={4} borderColor="gray.300" />
+
+        <Box maxW="3xl" mx="auto">
+          <SectionTitleAbout>Outras Fontes</SectionTitleAbout>
+          <OtherSources />
+        </Box>
+
+        <Divider mb={4} borderColor="gray.300" />
+
+        <Box maxW="3xl" mx="auto">
+          <SectionTitleAbout>Documentos e Links</SectionTitleAbout>
+          <Box size={4} />
+          <RelatedLinksList />
+        </Box>
       </Box>
 
       <Box size="16px" />

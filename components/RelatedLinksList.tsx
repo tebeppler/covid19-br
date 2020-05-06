@@ -87,6 +87,12 @@ function getCorrespondingColor(kind: DocumentKind) {
 class RelatedLinksList extends Component {
   data: Array<RelatedDocument> = [
     new RelatedDocument(
+      "Cuidados com análises de dados da Covid19",
+      DocumentKind.Info,
+      "Bastos, L. (FIOCRUZ), 05/05/2020",
+      "http://www.statpop.com.br/2020/05/cuidados-com-analises-de-dados-da.html"
+    ),
+    new RelatedDocument(
       "Combate ao COVID-19 em cidades menores, o dia D é hoje!",
       DocumentKind.Article,
       "Brugnago, E., Beims, M., 30/04/2020",

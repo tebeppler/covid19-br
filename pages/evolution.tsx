@@ -80,7 +80,7 @@ export default () => {
             />
           </StyledFlex>
         </Box>
-        
+
         <Divider mb={4} borderColor="gray.300" />
 
         <Box maxW="3xl" mx="auto">

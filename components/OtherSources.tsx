@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import styled from "@emotion/styled";
 import * as d3 from "d3";
-import { gray } from "d3";
+import { Box } from "@chakra-ui/core";
 
 // gray.300
 const color = "#CBD5E0";
 
 const Styles = styled.div`
   padding: 1rem;
+  overflow-x: auto;
 
   table {
+    padding: 1rem;
     border-spacing: 0;
     border: 1px solid ${color};
     text-align: center;
@@ -36,12 +38,6 @@ const Styles = styled.div`
         border-right: 0;
       }
     }
-
-    tr:last-child td:first-child {
-    border-bottom-left-radius: 32px;
-    border: 1px solid ${color};
-}
-    
   }
 `;
 
@@ -95,43 +91,48 @@ class RelatedLinksList extends Component {
   render() {
     return (
       <Styles>
-        <table>
-          <thead>
-            <tr>
-              <th>Dados no Brasil</th>
-              <th>Casos</th>
-              <th>Mortes</th>
-              <th>Recuperados</th>
-              <th>Última atualização</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th>
-                <a href="https://coronavirus.jhu.edu/map.html">John Hopkins</a>
-              </th>
-              <td>{this.state.jhuBrCases}</td>
-              <td>{this.state.jhuBrDeaths}</td>
-              <td>{this.state.jhuBrRecovered}</td>
-              <td>{this.state.jhuBrDate}</td>
-            </tr>
-            <tr>
-              <th>
-                <a href="https://brasil.io/dataset/covid19/">Brasil.io</a>
-              </th>
-              <td>{this.state.brioCases}</td>
-              <td>{this.state.brioDeaths}</td>
-              <td>---</td>
-              <td>{this.state.brioDate}</td>
-            </tr>
-            {/* <tr>
+        {/* https://stackoverflow.com/questions/10054870/when-a-child-element-overflows-horizontally-why-is-the-right-padding-of-the-par */}
+        <Box display="inline-block">
+          <table>
+            <thead>
+              <tr>
+                <th>Dados no Brasil</th>
+                <th>Casos</th>
+                <th>Mortes</th>
+                <th>Recuperados</th>
+                <th>Última atualização</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>
+                  <a href="https://coronavirus.jhu.edu/map.html">
+                    John Hopkins
+                  </a>
+                </th>
+                <td>{this.state.jhuBrCases}</td>
+                <td>{this.state.jhuBrDeaths}</td>
+                <td>{this.state.jhuBrRecovered}</td>
+                <td>{this.state.jhuBrDate}</td>
+              </tr>
+              <tr>
+                <th>
+                  <a href="https://brasil.io/dataset/covid19/">Brasil.io</a>
+                </th>
+                <td>{this.state.brioCases}</td>
+                <td>{this.state.brioDeaths}</td>
+                <td>---</td>
+                <td>{this.state.brioDate}</td>
+              </tr>
+              {/* <tr>
               <th>Outro</th>
               <td>cell2</td>
               <td>cell3</td>
               <td>cell4</td>
             </tr> */}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </Box>
       </Styles>
     );
   }

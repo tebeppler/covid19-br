@@ -159,7 +159,7 @@ class RelatedLinksList extends Component {
             ]}
             key={d.url}
           >
-            <Box m={1} p={1} rounded={8} borderWidth="1px">
+            <Box m={1} p={1} rounded={8} borderWidth="1px" bg="white">
               <Link href={d.url} style={{ textDecoration: "none" }}>
                 <DocumentItem kind={d.kind} title={d.title}>
                   {d.author}

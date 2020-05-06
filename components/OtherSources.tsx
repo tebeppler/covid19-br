@@ -9,6 +9,7 @@ const color = "#CBD5E0";
 const Styles = styled.div`
   padding: 1rem;
   overflow-x: auto;
+  /* align-items: center; */
 
   table {
     padding: 1rem;
@@ -60,7 +61,7 @@ class RelatedLinksList extends Component {
     const jhuGl = await d3.csv("/current_GL.csv");
     const brIO = await d3.csv("/caso_shrink.csv");
 
-    const parser = d3.utcParse("%Y-%m-%d");
+    const parser = d3.timeParse("%Y-%m-%d");
 
     const brIOCases = brIO
       .map((d) => +d.confirmed)
@@ -90,50 +91,60 @@ class RelatedLinksList extends Component {
 
   render() {
     return (
-      <Styles>
-        {/* https://stackoverflow.com/questions/10054870/when-a-child-element-overflows-horizontally-why-is-the-right-padding-of-the-par */}
-        <Box display="inline-block">
-          <table>
-            <thead>
-              <tr>
-                <th>Dados no Brasil</th>
-                <th>Casos</th>
-                <th>Mortes</th>
-                <th>Recuperados</th>
-                <th>Última atualização</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th>
-                  <a href="https://coronavirus.jhu.edu/map.html">
-                    John Hopkins
-                  </a>
-                </th>
-                <td>{this.state.jhuBrCases}</td>
-                <td>{this.state.jhuBrDeaths}</td>
-                <td>{this.state.jhuBrRecovered}</td>
-                <td>{this.state.jhuBrDate}</td>
-              </tr>
-              <tr>
-                <th>
-                  <a href="https://brasil.io/dataset/covid19/">Brasil.io</a>
-                </th>
-                <td>{this.state.brioCases}</td>
-                <td>{this.state.brioDeaths}</td>
-                <td>---</td>
-                <td>{this.state.brioDate}</td>
-              </tr>
-              {/* <tr>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+        // https://stackoverflow.com/questions/47826359/using-overflow-x-scroll-with-justify-content-center-hides-the-earlier-blocks
+      >
+        <Styles>
+          <Box
+            display="inline-block"
+            // https://stackoverflow.com/questions/10054870/when-a-child-element-overflows-horizontally-why-is-the-right-padding-of-the-par
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th>Dados no Brasil</th>
+                  <th>Casos</th>
+                  <th>Mortes</th>
+                  <th>Recuperados</th>
+                  <th>Última atualização</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>
+                    <a href="https://coronavirus.jhu.edu/map.html">
+                      John Hopkins
+                    </a>
+                  </th>
+                  <td>{this.state.jhuBrCases}</td>
+                  <td>{this.state.jhuBrDeaths}</td>
+                  <td>{this.state.jhuBrRecovered}</td>
+                  <td>{this.state.jhuBrDate}</td>
+                </tr>
+                <tr>
+                  <th>
+                    <a href="https://brasil.io/dataset/covid19/">Brasil.io</a>
+                  </th>
+                  <td>{this.state.brioCases}</td>
+                  <td>{this.state.brioDeaths}</td>
+                  <td>---</td>
+                  <td>{this.state.brioDate}</td>
+                </tr>
+                {/* <tr>
               <th>Outro</th>
               <td>cell2</td>
               <td>cell3</td>
               <td>cell4</td>
             </tr> */}
-            </tbody>
-          </table>
-        </Box>
-      </Styles>
+              </tbody>
+            </table>
+          </Box>
+        </Styles>
+      </div>
     );
   }
 }

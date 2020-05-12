@@ -166,7 +166,7 @@ export default () => {
             <Divider />
 
       <TextImageContainer>
-        <SectionTitle>Curva de casos.</SectionTitle>
+        <SectionTitle>Curva de casos</SectionTitle>
         <SectionSubtitle>estados do Brasil</SectionSubtitle>
         <Box size={4} />
         <CenteredImage src="/figs/animacao_corona.gif" />

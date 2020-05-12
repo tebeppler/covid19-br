@@ -165,12 +165,12 @@ export default () => {
       
             <Divider />
 
-      <GetCovidDataComp>
+      <TextImageContainer>
         <SectionTitle>Curva de casos.</SectionTitle>
         <SectionSubtitle>estados do Brasil</SectionSubtitle>
         <Box size={4} />
-        <Curva_Nivel_Nao_Cumulada_CAMERA_BRASIL />
-      </GetCovidDataComp>
+        <CenteredImage src="/figs/animacao_corona.gif" />
+      </TextImageContainer>
       
 
       <Footer />

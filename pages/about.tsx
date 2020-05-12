@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import ContourParana from "../components/d3/ContourParana";
 import ContourBrazil from "../components/d3/ContourBrazil";
 import GetCovidDataComp from "../components/GetCovidDataComp";
+import "../components/d3/Curva_Nivel_Nao_Cumulada_CAMERA_BRASIL"
 import {
   SectionTitle,
   SectionSubtitle,
@@ -161,6 +162,16 @@ export default () => {
           <ContourParana />
         </Box>
       </GetCovidDataComp>
+      
+            <Divider />
+
+      <GetCovidDataComp>
+        <SectionTitle>Curva de casos.</SectionTitle>
+        <SectionSubtitle>estados do Brasil</SectionSubtitle>
+        <Box size={4} />
+        <Curva_Nivel_Nao_Cumulada_CAMERA_BRASIL />
+      </GetCovidDataComp>
+      
 
       <Footer />
     </Box>

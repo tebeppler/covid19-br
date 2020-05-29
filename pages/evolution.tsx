@@ -80,6 +80,17 @@ export default () => {
             />
           </StyledFlex>
         </Box>
+        <Box maxW="3xl" mx="auto" pt="16px" pb="8px">
+          <StyledFlex>
+            <AccessOtherSite
+              title="Visualização temporal"
+              subtitle="Visualização temporal de dados de COVID19."
+              access="Acessar site"
+              src="/elias_preview.jpg"
+              url="shiny.leg.ufpr.br/elias/covid19time/"
+            />
+          </StyledFlex>
+        </Box>
 
         <Divider mb={4} borderColor="gray.300" />
 
